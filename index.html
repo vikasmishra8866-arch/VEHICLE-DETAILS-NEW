@@ -4,532 +4,584 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vehicle Profile PDF Generator</title>
+<title>Vehicle PDF Generator</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
+*{
+    box-sizing:border-box;
+}
 
-    body {
-        margin: 0;
-        min-height: 100vh;
-        font-family: Arial, Helvetica, sans-serif;
-        background:
-            radial-gradient(circle at top left, #162337 0%, transparent 40%),
-            radial-gradient(circle at bottom right, #0b1828 0%, transparent 45%),
-            #050b12;
-        color: #eef3f7;
-        padding: 25px 15px;
-    }
+body{
+    margin:0;
+    min-height:100vh;
+    padding:25px 15px;
+    font-family:Arial,Helvetica,sans-serif;
+    color:#eef3f7;
+    background:
+        radial-gradient(circle at top left,#162337 0%,transparent 40%),
+        radial-gradient(circle at bottom right,#0b1828 0%,transparent 45%),
+        #050b12;
+}
 
-    .app {
-        width: min(900px, 100%);
-        margin: auto;
-    }
+.app{
+    width:min(900px,100%);
+    margin:auto;
+}
 
-    .app-header {
-        text-align: center;
-        margin-bottom: 20px;
-    }
+.app-header{
+    text-align:center;
+    margin-bottom:20px;
+}
 
-    .app-header h1 {
-        margin: 0 0 7px;
-        font-size: 28px;
-        letter-spacing: 2px;
-    }
+.app-header h1{
+    margin:0 0 7px;
+    font-size:28px;
+    letter-spacing:2px;
+}
 
-    .app-header p {
-        margin: 0;
-        color: #9eacba;
-        font-size: 13px;
-    }
+.app-header p{
+    margin:0;
+    color:#9eacba;
+    font-size:13px;
+}
 
-    .panel {
-        background: rgba(13, 23, 35, 0.92);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 16px;
-        padding: 18px;
-        box-shadow: 0 20px 60px rgba(0,0,0,.35);
-    }
+.panel{
+    background:rgba(13,23,35,.92);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    padding:18px;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
 
-    textarea {
-        width: 100%;
-        min-height: 400px;
-        resize: vertical;
-        border: 1px solid #2b3948;
-        border-radius: 12px;
-        padding: 16px;
-        background: #08111b;
-        color: #eaf1f7;
-        outline: none;
-        font: 13px/1.55 Consolas, Monaco, monospace;
-    }
+textarea{
+    width:100%;
+    min-height:400px;
+    resize:vertical;
+    border:1px solid #2b3948;
+    border-radius:12px;
+    padding:16px;
+    background:#08111b;
+    color:#eaf1f7;
+    outline:none;
+    font:13px/1.55 Consolas,Monaco,monospace;
+}
 
-    textarea:focus {
-        border-color: #4d7ea8;
-        box-shadow: 0 0 0 3px rgba(77,126,168,.15);
-    }
+textarea:focus{
+    border-color:#4d7ea8;
+    box-shadow:0 0 0 3px rgba(77,126,168,.15);
+}
 
-    .buttons {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-top: 14px;
-    }
+.buttons{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:14px;
+}
 
-    button {
-        border: 0;
-        border-radius: 9px;
-        padding: 12px 18px;
-        cursor: pointer;
-        font-weight: 700;
-        letter-spacing: .3px;
-        transition: .2s;
-    }
+button{
+    border:0;
+    border-radius:9px;
+    padding:12px 18px;
+    cursor:pointer;
+    font-weight:700;
+    letter-spacing:.3px;
+    transition:.2s;
+}
 
-    .generate {
-        flex: 1;
-        min-width: 220px;
-        background: linear-gradient(135deg, #2e8b57, #1d6d43);
-        color: white;
-    }
+.generate{
+    flex:1;
+    min-width:220px;
+    background:linear-gradient(135deg,#2e8b57,#1d6d43);
+    color:#fff;
+}
 
-    .format-btn,
-    .clear-btn {
-        background: #182534;
-        color: #dce6ee;
-        border: 1px solid #2a3b4d;
-    }
+.format-btn,
+.clear-btn{
+    background:#182534;
+    color:#dce6ee;
+    border:1px solid #2a3b4d;
+}
 
-    button:hover {
-        transform: translateY(-1px);
-        filter: brightness(1.08);
-    }
+button:hover{
+    transform:translateY(-1px);
+    filter:brightness(1.08);
+}
 
-    .note {
-        margin-top: 12px;
-        color: #8192a3;
-        font-size: 11px;
-        text-align: center;
-    }
+.note{
+    margin-top:12px;
+    color:#8192a3;
+    font-size:11px;
+    text-align:center;
+}
 
-    /* =========================================================
-       PDF STAGING AREA
-       ========================================================= */
+#pdfStage{
+    position:fixed;
+    left:-100000px;
+    top:0;
+    pointer-events:none;
+}
 
-    #pdfStage {
-        position: fixed;
-        left: -100000px;
-        top: 0;
-        pointer-events: none;
-    }
+/* =========================================================
+   A4 PAGE
+   ========================================================= */
 
-    .pdf-page {
-        width: 794px;
-        height: 1123px;
-        background:
-            repeating-linear-gradient(
-                0deg,
-                rgba(15, 23, 35, 0.015) 0px,
-                rgba(15, 23, 35, 0.015) 1px,
-                transparent 1px,
-                transparent 4px
-            ),
-            #ffffff;
-        color: #17212b;
-        position: relative;
-        overflow: hidden;
-        font-family: Arial, Helvetica, sans-serif;
-    }
+.pdf-page{
+    width:794px;
+    height:1123px;
+    position:relative;
+    overflow:hidden;
+    color:#17212b;
+    font-family:Arial,Helvetica,sans-serif;
 
-    .pdf-page::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        opacity: .28;
-        background:
-            repeating-linear-gradient(
-                90deg,
-                transparent 0px,
-                transparent 4px,
-                rgba(0,0,0,.012) 4px,
-                rgba(0,0,0,.012) 5px
-            );
-    }
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(15,23,35,.014) 0px,
+            rgba(15,23,35,.014) 1px,
+            transparent 1px,
+            transparent 4px
+        ),
+        #fff;
+}
 
-    .top-line {
-        height: 6px;
-        background: linear-gradient(
+.pdf-page::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:.30;
+    background:
+        repeating-linear-gradient(
             90deg,
-            #15283b,
-            #47667f,
-            #15283b
+            transparent 0px,
+            transparent 4px,
+            rgba(0,0,0,.012) 4px,
+            rgba(0,0,0,.012) 5px
         );
+}
+
+.top-line{
+    height:6px;
+    background:linear-gradient(
+        90deg,
+        #15283b,
+        #47667f,
+        #15283b
+    );
+}
+
+.pdf-inner{
+    position:relative;
+    z-index:1;
+    height:calc(100% - 6px);
+    padding:27px 38px 22px;
+    display:flex;
+    flex-direction:column;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.report-header{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:25px;
+    align-items:end;
+    padding-bottom:16px;
+    border-bottom:1px solid #d3d9de;
+    position:relative;
+}
+
+.report-header::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:4px;
+    height:1px;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #9ca8b2 0px,
+            #9ca8b2 3px,
+            transparent 3px,
+            transparent 7px
+        );
+}
+
+.eyebrow{
+    font-size:10px;
+    letter-spacing:3px;
+    font-weight:700;
+    color:#71808e;
+    margin-bottom:7px;
+}
+
+.report-title{
+    margin:0;
+    font-size:30px;
+    letter-spacing:1.5px;
+    line-height:1;
+    font-weight:800;
+    color:#14212d;
+}
+
+.registration{
+    font-size:28px;
+    font-weight:800;
+    letter-spacing:1px;
+    color:#0f1e2b;
+    text-align:right;
+    white-space:nowrap;
+}
+
+.reg-label{
+    font-size:8.5px;
+    letter-spacing:2px;
+    color:#788693;
+    margin-bottom:4px;
+    text-align:right;
+}
+
+/* =========================================================
+   VEHICLE STRIP
+   ========================================================= */
+
+.vehicle-strip{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:25px;
+    align-items:center;
+    padding:15px 0 14px;
+    border-bottom:1px solid #d8dde2;
+    position:relative;
+}
+
+.vehicle-strip::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:4px;
+    border-bottom:1px dashed #c3cbd2;
+}
+
+.maker{
+    font-size:17px;
+    font-weight:800;
+    letter-spacing:.6px;
+    margin-bottom:3px;
+    text-transform:uppercase;
+}
+
+.model{
+    font-size:14px;
+    color:#667581;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+}
+
+.mobile-box{
+    min-width:205px;
+    padding:9px 14px;
+    border-radius:7px;
+    background:#e7f7ec;
+    border:1px solid #a9d9b8;
+    color:#176b35;
+    text-align:right;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.5);
+}
+
+.mobile-label{
+    font-size:8.5px;
+    letter-spacing:1.7px;
+    text-transform:uppercase;
+    font-weight:700;
+    margin-bottom:3px;
+    color:#408154;
+}
+
+.mobile-value{
+    font-size:16px;
+    font-weight:800;
+    letter-spacing:.7px;
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.content{
+    margin-top:17px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:34px;
+    row-gap:21px;
+    flex:1;
+    align-content:start;
+}
+
+.section{
+    min-width:0;
+    position:relative;
+    padding-bottom:9px;
+}
+
+.section.full{
+    grid-column:1 / -1;
+}
+
+.section::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:1px;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #c4ccd3 0px,
+            #c4ccd3 5px,
+            transparent 5px,
+            transparent 9px
+        );
+}
+
+.section-heading{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-bottom:7px;
+}
+
+.section-number{
+    font-size:9px;
+    font-weight:800;
+    color:#8795a0;
+    letter-spacing:1px;
+}
+
+.section-title{
+    font-size:10.5px;
+    letter-spacing:2px;
+    font-weight:800;
+    text-transform:uppercase;
+    color:#2c3d4b;
+    white-space:nowrap;
+}
+
+.section-heading::after{
+    content:"";
+    flex:1;
+    height:2px;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #b8c1c9 0px,
+            #b8c1c9 3px,
+            transparent 3px,
+            transparent 7px
+        );
+}
+
+.info-row{
+    display:grid;
+    grid-template-columns:44% 56%;
+    min-height:30px;
+    padding:5px 0;
+    border-bottom:1px solid #e9edf0;
+    align-items:center;
+}
+
+.label{
+    color:#71808d;
+    font-size:10px;
+    line-height:1.25;
+    padding-right:10px;
+}
+
+.value{
+    color:#1c2934;
+    font-size:11.5px;
+    font-weight:700;
+    line-height:1.3;
+    word-break:break-word;
+    overflow-wrap:anywhere;
+}
+
+/* =========================================================
+   ADDRESS INSIDE DETAILS
+   ========================================================= */
+
+.address-row{
+    grid-column:1 / -1;
+}
+
+.address-value{
+    line-height:1.45;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.pdf-footer{
+    margin-top:auto;
+    padding-top:12px;
+    border-top:1px solid #d4dbe0;
+    position:relative;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:20px;
+    align-items:center;
+}
+
+.pdf-footer::before{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    top:4px;
+    border-top:1px dashed #c4ccd2;
+}
+
+.prepared{
+    font-size:8.5px;
+    color:#788793;
+    letter-spacing:1px;
+    text-transform:uppercase;
+}
+
+.prepared strong{
+    color:#273641;
+    font-size:10px;
+}
+
+.page-no{
+    font-size:8.5px;
+    color:#7d8994;
+    letter-spacing:1px;
+}
+
+/* =========================================================
+   PAGE 2
+   ========================================================= */
+
+.page-2 .pdf-inner{
+    padding-top:27px;
+}
+
+.page-2 .report-title{
+    font-size:27px;
+}
+
+.page-2 .registration{
+    font-size:25px;
+}
+
+.page-2 .content{
+    margin-top:18px;
+    row-gap:23px;
+}
+
+.page-2 .info-row{
+    min-height:34px;
+    padding:6px 0;
+}
+
+.page-2 .label{
+    font-size:10.5px;
+}
+
+.page-2 .value{
+    font-size:12px;
+}
+
+.page-2 .section-title{
+    font-size:10.5px;
+}
+
+.page-2-note{
+    margin-top:8px;
+    padding-top:7px;
+    border-top:1px dashed #c5cdd3;
+    color:#8a959e;
+    font-size:8.5px;
+    text-align:right;
+    letter-spacing:.7px;
+}
+
+/* =========================================================
+   LOADER
+   ========================================================= */
+
+.loader-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(3,8,13,.78);
+    backdrop-filter:blur(5px);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.loader-box{
+    background:#101c28;
+    border:1px solid #2d4053;
+    border-radius:14px;
+    padding:25px 30px;
+    text-align:center;
+    min-width:230px;
+}
+
+.spinner{
+    width:35px;
+    height:35px;
+    border:3px solid #33485d;
+    border-top-color:#67c58a;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin:auto auto 13px;
+}
+
+.loader-text{
+    font-size:13px;
+    color:#dce8f0;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+@media(max-width:700px){
+    body{
+        padding:15px 10px;
     }
 
-    .pdf-inner {
-        padding: 30px 38px 25px;
-        position: relative;
-        z-index: 1;
-        height: calc(100% - 6px);
-        display: flex;
-        flex-direction: column;
+    .panel{
+        padding:12px;
     }
 
-    /* =========================================================
-       HEADER
-       ========================================================= */
-
-    .report-header {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 25px;
-        align-items: end;
-        padding-bottom: 18px;
-        border-bottom: 1px solid #d8dde2;
+    textarea{
+        min-height:330px;
     }
 
-    .eyebrow {
-        font-size: 11px;
-        letter-spacing: 3px;
-        font-weight: 700;
-        color: #71808e;
-        margin-bottom: 8px;
+    .buttons{
+        flex-direction:column;
     }
 
-    .report-title {
-        margin: 0;
-        font-size: 31px;
-        letter-spacing: 1.5px;
-        line-height: 1;
-        font-weight: 800;
-        color: #14212d;
+    button{
+        width:100%;
     }
-
-    .registration {
-        font-size: 29px;
-        font-weight: 800;
-        letter-spacing: 1px;
-        color: #0f1e2b;
-        text-align: right;
-        white-space: nowrap;
-    }
-
-    .reg-label {
-        font-size: 9px;
-        letter-spacing: 2px;
-        color: #788693;
-        margin-bottom: 5px;
-        text-align: right;
-    }
-
-    /* =========================================================
-       HERO / MOBILE NUMBER
-       ========================================================= */
-
-    .vehicle-strip {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 25px;
-        align-items: center;
-        padding: 18px 0 17px;
-        border-bottom: 1px solid #d8dde2;
-    }
-
-    .maker {
-        font-size: 18px;
-        font-weight: 800;
-        letter-spacing: .6px;
-        margin-bottom: 4px;
-        text-transform: uppercase;
-    }
-
-    .model {
-        font-size: 15px;
-        color: #667581;
-        letter-spacing: .5px;
-        text-transform: uppercase;
-    }
-
-    .mobile-box {
-        min-width: 205px;
-        padding: 10px 15px;
-        border-radius: 7px;
-        background: #e7f7ec;
-        border: 1px solid #a9d9b8;
-        color: #176b35;
-        text-align: right;
-    }
-
-    .mobile-label {
-        font-size: 9px;
-        letter-spacing: 1.7px;
-        text-transform: uppercase;
-        font-weight: 700;
-        margin-bottom: 3px;
-        color: #408154;
-    }
-
-    .mobile-value {
-        font-size: 16px;
-        font-weight: 800;
-        letter-spacing: .7px;
-    }
-
-    /* =========================================================
-       SECTIONS
-       ========================================================= */
-
-    .content {
-        margin-top: 20px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        column-gap: 35px;
-        row-gap: 24px;
-        flex: 1;
-        align-content: start;
-    }
-
-    .section {
-        min-width: 0;
-    }
-
-    .section.full {
-        grid-column: 1 / -1;
-    }
-
-    .section-heading {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        margin-bottom: 9px;
-    }
-
-    .section-number {
-        font-size: 10px;
-        font-weight: 800;
-        color: #8393a1;
-        letter-spacing: 1px;
-    }
-
-    .section-title {
-        font-size: 11px;
-        letter-spacing: 2px;
-        font-weight: 800;
-        text-transform: uppercase;
-        color: #2c3d4b;
-        white-space: nowrap;
-    }
-
-    .section-heading::after {
-        content: "";
-        flex: 1;
-        height: 2px;
-        background:
-            repeating-linear-gradient(
-                90deg,
-                #bdc6ce 0px,
-                #bdc6ce 4px,
-                transparent 4px,
-                transparent 8px
-            );
-    }
-
-    .info-row {
-        display: grid;
-        grid-template-columns: 44% 56%;
-        min-height: 29px;
-        padding: 5px 0;
-        border-bottom: 1px solid #eceff2;
-        align-items: center;
-    }
-
-    .label {
-        color: #71808d;
-        font-size: 10px;
-        line-height: 1.25;
-        padding-right: 10px;
-    }
-
-    .value {
-        color: #1c2934;
-        font-size: 11.5px;
-        font-weight: 700;
-        line-height: 1.3;
-        word-break: break-word;
-        overflow-wrap: anywhere;
-    }
-
-    .address-wrap {
-        margin-top: 18px;
-        padding-top: 13px;
-        border-top: 1px solid #d8dde2;
-    }
-
-    .address-label {
-        font-size: 10px;
-        letter-spacing: 1.8px;
-        color: #7b8995;
-        font-weight: 800;
-        text-transform: uppercase;
-        margin-bottom: 6px;
-    }
-
-    .address-value {
-        font-size: 12px;
-        line-height: 1.5;
-        color: #273541;
-        font-weight: 600;
-    }
-
-    /* =========================================================
-       FOOTER
-       ========================================================= */
-
-    .pdf-footer {
-        margin-top: auto;
-        padding-top: 13px;
-        border-top: 1px solid #d8dde2;
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 20px;
-        align-items: center;
-    }
-
-    .prepared {
-        font-size: 9px;
-        color: #788793;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-    }
-
-    .prepared strong {
-        color: #273641;
-        font-size: 10px;
-    }
-
-    .page-no {
-        font-size: 9px;
-        color: #7d8994;
-        letter-spacing: 1px;
-    }
-
-    /* =========================================================
-       PAGE 2
-       ========================================================= */
-
-    .page-2 .content {
-        margin-top: 20px;
-    }
-
-    .page-2 .report-header {
-        padding-bottom: 15px;
-    }
-
-    .page-2 .report-title {
-        font-size: 26px;
-    }
-
-    .page-2 .registration {
-        font-size: 24px;
-    }
-
-    .page-2 .info-row {
-        min-height: 32px;
-        padding: 6px 0;
-    }
-
-    .page-2 .label {
-        font-size: 10.5px;
-    }
-
-    .page-2 .value {
-        font-size: 12px;
-    }
-
-    .page-2 .section-title {
-        font-size: 11px;
-    }
-
-    .page-break-note {
-        margin-top: 12px;
-        font-size: 9px;
-        color: #8b969f;
-        text-align: right;
-        letter-spacing: .5px;
-    }
-
-    /* =========================================================
-       LOADER
-       ========================================================= */
-
-    .loader-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(3,8,13,.78);
-        backdrop-filter: blur(5px);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    }
-
-    .loader-box {
-        background: #101c28;
-        border: 1px solid #2d4053;
-        border-radius: 14px;
-        padding: 25px 30px;
-        text-align: center;
-        min-width: 230px;
-    }
-
-    .spinner {
-        width: 35px;
-        height: 35px;
-        border: 3px solid #33485d;
-        border-top-color: #67c58a;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: auto auto 13px;
-    }
-
-    .loader-text {
-        font-size: 13px;
-        color: #dce8f0;
-    }
-
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    @media (max-width: 700px) {
-        body {
-            padding: 15px 10px;
-        }
-
-        .panel {
-            padding: 12px;
-        }
-
-        textarea {
-            min-height: 330px;
-        }
-
-        .buttons {
-            flex-direction: column;
-        }
-
-        button {
-            width: 100%;
-        }
-    }
+}
 </style>
 </head>
 
@@ -543,76 +595,139 @@
     </div>
 
     <div class="panel">
-        <textarea id="jsonInput" spellcheck="false" placeholder='Paste JSON here...'></textarea>
+
+        <textarea
+            id="jsonInput"
+            spellcheck="false"
+            placeholder="Paste JSON here..."
+        ></textarea>
 
         <div class="buttons">
-            <button class="generate" onclick="generatePDF()">
+
+            <button
+                class="generate"
+                onclick="generatePDF()"
+            >
                 Generate Premium PDF
             </button>
 
-            <button class="format-btn" onclick="formatJSON()">
+            <button
+                class="format-btn"
+                onclick="formatJSON()"
+            >
                 Format
             </button>
 
-            <button class="clear-btn" onclick="clearJSON()">
+            <button
+                class="clear-btn"
+                onclick="clearJSON()"
+            >
                 Clear
             </button>
+
         </div>
 
         <div class="note">
             Ctrl + Enter = Generate PDF
         </div>
+
     </div>
 
 </div>
 
-<!-- Hidden PDF render area -->
+
 <div id="pdfStage">
 
-    <!-- ======================================================
+    <!-- =====================================================
          PAGE 1
-         ====================================================== -->
+         ===================================================== -->
 
-    <div class="pdf-page page-1" id="pdfPage1">
+    <div
+        class="pdf-page page-1"
+        id="pdfPage1"
+    >
 
         <div class="top-line"></div>
 
         <div class="pdf-inner">
 
             <div class="report-header">
+
                 <div>
-                    <div class="eyebrow">VEHICLE DOCUMENTATION</div>
-                    <h1 class="report-title">VEHICLE PROFILE</h1>
+                    <div class="eyebrow">
+                        VEHICLE DOCUMENTATION
+                    </div>
+
+                    <h1 class="report-title">
+                        VEHICLE PROFILE
+                    </h1>
                 </div>
 
                 <div>
-                    <div class="reg-label">REGISTRATION NUMBER</div>
-                    <div class="registration" id="p1Registration">—</div>
+
+                    <div class="reg-label">
+                        REGISTRATION NUMBER
+                    </div>
+
+                    <div
+                        class="registration"
+                        id="p1Registration"
+                    >
+                        -
+                    </div>
+
                 </div>
+
             </div>
+
 
             <div class="vehicle-strip">
 
                 <div>
-                    <div class="maker" id="p1Maker">—</div>
-                    <div class="model" id="p1Model">—</div>
+
+                    <div
+                        class="maker"
+                        id="p1Maker"
+                    >
+                        -
+                    </div>
+
+                    <div
+                        class="model"
+                        id="p1Model"
+                    >
+                        -
+                    </div>
+
                 </div>
+
 
                 <div class="mobile-box">
-                    <div class="mobile-label">Mobile Number</div>
-                    <div class="mobile-value" id="p1Mobile">—</div>
+
+                    <div class="mobile-label">
+                        MOBILE NUMBER
+                    </div>
+
+                    <div
+                        class="mobile-value"
+                        id="p1Mobile"
+                    >
+                        -
+                    </div>
+
                 </div>
 
             </div>
 
-            <div class="content" id="page1Content"></div>
 
-            <div class="address-wrap" id="p1AddressWrap">
-                <div class="address-label">Registered Address</div>
-                <div class="address-value" id="p1Address">—</div>
-            </div>
+            <div
+                class="content"
+                id="page1Content"
+            ></div>
+
 
             <div class="pdf-footer">
+
                 <div class="prepared">
                     PREPARED BY <strong>MRX</strong>
                 </div>
@@ -620,55 +735,112 @@
                 <div class="page-no">
                     PAGE 01 / 02
                 </div>
+
             </div>
 
         </div>
+
     </div>
 
 
-    <!-- ======================================================
+    <!-- =====================================================
          PAGE 2
-         ====================================================== -->
+         ===================================================== -->
 
-    <div class="pdf-page page-2" id="pdfPage2">
+    <div
+        class="pdf-page page-2"
+        id="pdfPage2"
+    >
 
         <div class="top-line"></div>
 
         <div class="pdf-inner">
 
             <div class="report-header">
-                <div>
-                    <div class="eyebrow">VEHICLE DOCUMENTATION</div>
-                    <h1 class="report-title">TECHNICAL & REGISTRATION</h1>
-                </div>
 
                 <div>
-                    <div class="reg-label">REGISTRATION NUMBER</div>
-                    <div class="registration" id="p2Registration">—</div>
+
+                    <div class="eyebrow">
+                        VEHICLE DOCUMENTATION
+                    </div>
+
+                    <h1 class="report-title">
+                        TECHNICAL & REGISTRATION
+                    </h1>
+
                 </div>
+
+
+                <div>
+
+                    <div class="reg-label">
+                        REGISTRATION NUMBER
+                    </div>
+
+                    <div
+                        class="registration"
+                        id="p2Registration"
+                    >
+                        -
+                    </div>
+
+                </div>
+
             </div>
+
 
             <div class="vehicle-strip">
 
                 <div>
-                    <div class="maker" id="p2Maker">—</div>
-                    <div class="model" id="p2Model">—</div>
+
+                    <div
+                        class="maker"
+                        id="p2Maker"
+                    >
+                        -
+                    </div>
+
+                    <div
+                        class="model"
+                        id="p2Model"
+                    >
+                        -
+                    </div>
+
                 </div>
+
 
                 <div class="mobile-box">
-                    <div class="mobile-label">Mobile Number</div>
-                    <div class="mobile-value" id="p2Mobile">—</div>
+
+                    <div class="mobile-label">
+                        MOBILE NUMBER
+                    </div>
+
+                    <div
+                        class="mobile-value"
+                        id="p2Mobile"
+                    >
+                        -
+                    </div>
+
                 </div>
 
             </div>
 
-            <div class="content" id="page2Content"></div>
 
-            <div class="page-break-note">
-                Informational Use
+            <div
+                class="content"
+                id="page2Content"
+            ></div>
+
+
+            <div class="page-2-note">
+                INFORMATIONAL USE
             </div>
 
+
             <div class="pdf-footer">
+
                 <div class="prepared">
                     PREPARED BY <strong>MRX</strong>
                 </div>
@@ -676,79 +848,169 @@
                 <div class="page-no">
                     PAGE 02 / 02
                 </div>
+
             </div>
 
         </div>
+
     </div>
 
 </div>
 
-<div class="loader-overlay" id="loader">
+
+<div
+    class="loader-overlay"
+    id="loader"
+>
+
     <div class="loader-box">
+
         <div class="spinner"></div>
-        <div class="loader-text">Generating 2-page PDF...</div>
+
+        <div class="loader-text">
+            Generating 2-page PDF...
+        </div>
+
     </div>
+
 </div>
+
 
 <script>
+
 /* ============================================================
    FIELD LABELS
    ============================================================ */
 
 const LABELS = {
-    REGISTRATION_NUMBER: "Registration Number",
-    OWNER_NAME: "Owner Name",
-    MOBILE_NUMBER: "Mobile Number",
 
-    MAKER: "Maker",
-    MODEL: "Model",
-    VEHICLE_CATEGORY: "Vehicle Category",
-    VEHICLE_CLASS: "Vehicle Class",
-    BODY_TYPE: "Body Type",
-    COLOUR: "Colour",
-    FUEL_TYPE: "Fuel Type",
-    ENGINE_NUMBER: "Engine Number",
-    CHASSIS_NUMBER: "Chassis Number",
+    REGISTRATION_NUMBER:
+        "Registration Number",
 
-    MANUFACTURING_MONTH: "Manufacturing Month",
-    SEATING_CAPACITY: "Seating Capacity",
-    CUBIC_CAPACITY: "Cubic Capacity",
-    UNLADEN_WEIGHT: "Unladen Weight",
-    GROSS_VEHICLE_WEIGHT: "Gross Vehicle Weight",
-    WHEELBASE: "Wheelbase",
+    OWNER_NAME:
+        "Owner Name",
 
-    RTO_NAME: "RTO Name",
-    STATE: "State",
-    PINCODE: "Pincode",
+    MOBILE_NUMBER:
+        "Mobile Number",
 
-    TRANSMISSION_TYPE: "Transmission Type",
-    MAX_POWER: "Maximum Power",
-    MAX_TORQUE: "Maximum Torque",
-    NO_OF_CYLINDERS: "Number of Cylinders",
-    FUEL_TANK_CAPACITY: "Fuel Tank Capacity",
-    BOOT_SPACE: "Boot Space",
-    TYRE_SIZE: "Tyre Size",
+    MAKER:
+        "Maker",
 
-    INSURANCE_COMPANY: "Insurance Company",
-    INSURANCE_POLICY_NUMBER: "Insurance Policy Number",
-    INSURANCE_VALIDITY: "Insurance Validity",
-    PUC_NUMBER: "PUC Number",
-    PUC_UPTO: "PUC Valid Up To",
-    HYPOTHECATION: "Hypothecation",
+    MODEL:
+        "Model",
 
-    REGISTRATION_DATE: "Registration Date",
-    REGISTRATION_VALIDITY: "Registration Validity",
-    EMISSION_NORM: "Emission Norm",
-    TAX_UPTO: "Tax Up To",
-    VEHICLE_AGE: "Vehicle Age",
-    DETAIL_BY: "Detail By",
+    VEHICLE_CATEGORY:
+        "Vehicle Category",
 
-    ADDRESS: "Address"
+    VEHICLE_CLASS:
+        "Vehicle Class",
+
+    BODY_TYPE:
+        "Body Type",
+
+    COLOUR:
+        "Colour",
+
+    FUEL_TYPE:
+        "Fuel Type",
+
+    ENGINE_NUMBER:
+        "Engine Number",
+
+    CHASSIS_NUMBER:
+        "Chassis Number",
+
+    MANUFACTURING_MONTH:
+        "Manufacturing Month",
+
+    SEATING_CAPACITY:
+        "Seating Capacity",
+
+    CUBIC_CAPACITY:
+        "Cubic Capacity",
+
+    UNLADEN_WEIGHT:
+        "Unladen Weight",
+
+    GROSS_VEHICLE_WEIGHT:
+        "Gross Vehicle Weight",
+
+    WHEELBASE:
+        "Wheelbase",
+
+    RTO_NAME:
+        "RTO Name",
+
+    STATE:
+        "State",
+
+    PINCODE:
+        "Pincode",
+
+    TRANSMISSION_TYPE:
+        "Transmission Type",
+
+    MAX_POWER:
+        "Maximum Power",
+
+    MAX_TORQUE:
+        "Maximum Torque",
+
+    NO_OF_CYLINDERS:
+        "Number of Cylinders",
+
+    FUEL_TANK_CAPACITY:
+        "Fuel Tank Capacity",
+
+    BOOT_SPACE:
+        "Boot Space",
+
+    TYRE_SIZE:
+        "Tyre Size",
+
+    INSURANCE_COMPANY:
+        "Insurance Company",
+
+    INSURANCE_POLICY_NUMBER:
+        "Insurance Policy Number",
+
+    INSURANCE_VALIDITY:
+        "Insurance Validity",
+
+    PUC_NUMBER:
+        "PUC Number",
+
+    PUC_UPTO:
+        "PUC Valid Up To",
+
+    HYPOTHECATION:
+        "Hypothecation",
+
+    REGISTRATION_DATE:
+        "Registration Date",
+
+    REGISTRATION_VALIDITY:
+        "Registration Validity",
+
+    ADDRESS:
+        "Address",
+
+    EMISSION_NORM:
+        "Emission Norm",
+
+    TAX_UPTO:
+        "Tax Up To",
+
+    VEHICLE_AGE:
+        "Vehicle Age",
+
+    DETAIL_BY:
+        "Detail By"
 };
 
 
 /* ============================================================
-   PERMANENTLY HIDDEN FIELDS
+   PERMANENTLY EXCLUDED
    ============================================================ */
 
 const EXCLUDED_FIELDS = new Set([
@@ -762,19 +1024,21 @@ const EXCLUDED_FIELDS = new Set([
    ============================================================ */
 
 const SECTIONS = [
+
     {
-        number: "01",
-        title: "OWNER INFORMATION",
-        fields: [
+        number:"01",
+        title:"OWNER INFORMATION",
+        fields:[
             "OWNER_NAME",
-            "MOBILE_NUMBER"
+            "MOBILE_NUMBER",
+            "ADDRESS"
         ]
     },
 
     {
-        number: "02",
-        title: "VEHICLE IDENTITY",
-        fields: [
+        number:"02",
+        title:"VEHICLE IDENTITY",
+        fields:[
             "REGISTRATION_NUMBER",
             "MAKER",
             "MODEL",
@@ -786,9 +1050,9 @@ const SECTIONS = [
     },
 
     {
-        number: "03",
-        title: "ENGINE & CHASSIS",
-        fields: [
+        number:"03",
+        title:"ENGINE & CHASSIS",
+        fields:[
             "ENGINE_NUMBER",
             "CHASSIS_NUMBER",
             "FUEL_TYPE",
@@ -799,9 +1063,9 @@ const SECTIONS = [
     },
 
     {
-        number: "04",
-        title: "DIMENSIONS & CAPACITY",
-        fields: [
+        number:"04",
+        title:"DIMENSIONS & CAPACITY",
+        fields:[
             "SEATING_CAPACITY",
             "UNLADEN_WEIGHT",
             "GROSS_VEHICLE_WEIGHT",
@@ -813,9 +1077,9 @@ const SECTIONS = [
     },
 
     {
-        number: "05",
-        title: "PERFORMANCE",
-        fields: [
+        number:"05",
+        title:"PERFORMANCE",
+        fields:[
             "MAX_POWER",
             "MAX_TORQUE",
             "EMISSION_NORM"
@@ -823,9 +1087,9 @@ const SECTIONS = [
     },
 
     {
-        number: "06",
-        title: "REGISTRATION & RTO",
-        fields: [
+        number:"06",
+        title:"REGISTRATION & RTO",
+        fields:[
             "RTO_NAME",
             "STATE",
             "PINCODE",
@@ -837,9 +1101,9 @@ const SECTIONS = [
     },
 
     {
-        number: "07",
-        title: "INSURANCE & COMPLIANCE",
-        fields: [
+        number:"07",
+        title:"INSURANCE & COMPLIANCE",
+        fields:[
             "INSURANCE_COMPANY",
             "INSURANCE_POLICY_NUMBER",
             "INSURANCE_VALIDITY",
@@ -850,9 +1114,9 @@ const SECTIONS = [
     },
 
     {
-        number: "08",
-        title: "ADDITIONAL DETAILS",
-        fields: [
+        number:"08",
+        title:"ADDITIONAL DETAILS",
+        fields:[
             "VEHICLE_AGE",
             "DETAIL_BY"
         ]
@@ -864,38 +1128,43 @@ const SECTIONS = [
    HELPERS
    ============================================================ */
 
-function escapeHTML(value) {
+function escapeHTML(value){
+
     return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 }
 
 
-function prettyLabel(key) {
-    if (LABELS[key]) {
+function prettyLabel(key){
+
+    if(LABELS[key]){
         return LABELS[key];
     }
 
     return String(key)
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, c => c.toUpperCase());
+        .replace(/_/g," ")
+        .replace(/\b\w/g,c => c.toUpperCase());
 }
 
 
-function cleanValue(value) {
-    if (value === null || value === undefined) {
+function cleanValue(value){
+
+    if(value === null || value === undefined){
         return "NA";
     }
 
-    if (typeof value === "object") {
-        try {
+    if(typeof value === "object"){
+
+        try{
             return JSON.stringify(value);
-        } catch {
+        }catch{
             return String(value);
         }
+
     }
 
     return String(value);
@@ -903,47 +1172,75 @@ function cleanValue(value) {
 
 
 /* ============================================================
-   CREATE SECTION
+   SECTION GENERATOR
    ============================================================ */
 
-function createSection(title, number, fields, data) {
+function createSection(
+    title,
+    number,
+    fields,
+    data
+){
 
-    const availableFields = fields.filter(key =>
-        Object.prototype.hasOwnProperty.call(data, key) &&
-        !EXCLUDED_FIELDS.has(key)
-    );
+    const availableFields =
+        fields.filter(key =>
+            Object.prototype.hasOwnProperty.call(data,key) &&
+            !EXCLUDED_FIELDS.has(key)
+        );
 
-    if (!availableFields.length) {
+    if(!availableFields.length){
         return "";
     }
 
+
     let html = `
+
         <section class="section">
+
             <div class="section-heading">
-                <span class="section-number">${escapeHTML(number)}</span>
-                <span class="section-title">${escapeHTML(title)}</span>
+
+                <span class="section-number">
+                    ${escapeHTML(number)}
+                </span>
+
+                <span class="section-title">
+                    ${escapeHTML(title)}
+                </span>
+
             </div>
     `;
 
+
     availableFields.forEach(key => {
 
-        let value = cleanValue(data[key]);
+        const value = cleanValue(data[key]);
 
-        /* Mobile is shown only in green hero box,
-           so don't duplicate it inside the section. */
-        if (key === "MOBILE_NUMBER") {
-            return;
-        }
 
         html += `
-            <div class="info-row">
-                <div class="label">${escapeHTML(prettyLabel(key))}</div>
-                <div class="value">${escapeHTML(value)}</div>
+
+            <div
+                class="info-row ${key === "ADDRESS" ? "address-row" : ""}"
+            >
+
+                <div class="label">
+                    ${escapeHTML(prettyLabel(key))}
+                </div>
+
+                <div class="value ${key === "ADDRESS" ? "address-value" : ""}">
+                    ${escapeHTML(value)}
+                </div>
+
             </div>
+
         `;
+
     });
 
-    html += `</section>`;
+
+    html += `
+        </section>
+    `;
+
 
     return html;
 }
@@ -953,13 +1250,14 @@ function createSection(title, number, fields, data) {
    UNKNOWN / FUTURE FIELDS
    ============================================================ */
 
-function getUnknownFields(data) {
+function getUnknownFields(data){
 
-    const knownKeys = new Set([
-        ...Object.keys(LABELS),
-        "FATHER_NAME",
-        "OWNER_NUMBER"
-    ]);
+    const knownKeys =
+        new Set([
+            ...Object.keys(LABELS),
+            "FATHER_NAME",
+            "OWNER_NUMBER"
+        ]);
 
     return Object.keys(data).filter(key =>
         !knownKeys.has(key) &&
@@ -969,159 +1267,241 @@ function getUnknownFields(data) {
 
 
 /* ============================================================
-   ADD UNKNOWN SECTION
+   UNKNOWN SECTION
    ============================================================ */
 
-function createUnknownSection(data) {
+function createUnknownSection(data){
 
-    const unknown = getUnknownFields(data);
+    const unknown =
+        getUnknownFields(data);
 
-    if (!unknown.length) {
+    if(!unknown.length){
         return "";
     }
 
+
     let html = `
+
         <section class="section full">
+
             <div class="section-heading">
-                <span class="section-number">09</span>
-                <span class="section-title">ADDITIONAL INFORMATION</span>
+
+                <span class="section-number">
+                    09
+                </span>
+
+                <span class="section-title">
+                    ADDITIONAL INFORMATION
+                </span>
+
             </div>
     `;
+
 
     unknown.forEach(key => {
 
         html += `
+
             <div class="info-row">
-                <div class="label">${escapeHTML(prettyLabel(key))}</div>
-                <div class="value">${escapeHTML(cleanValue(data[key]))}</div>
+
+                <div class="label">
+                    ${escapeHTML(prettyLabel(key))}
+                </div>
+
+                <div class="value">
+                    ${escapeHTML(cleanValue(data[key]))}
+                </div>
+
             </div>
+
         `;
+
     });
 
-    html += `</section>`;
+
+    html += `
+        </section>
+    `;
+
 
     return html;
 }
 
 
 /* ============================================================
-   PARSE JSON
+   READ JSON
    ============================================================ */
 
-function getData() {
+function getData(){
 
-    const raw = document.getElementById("jsonInput").value.trim();
+    const raw =
+        document.getElementById("jsonInput")
+        .value
+        .trim();
 
-    if (!raw) {
-        throw new Error("Please paste JSON data first.");
+
+    if(!raw){
+        throw new Error(
+            "Please paste JSON data first."
+        );
     }
+
 
     let data;
 
-    try {
+
+    try{
+
         data = JSON.parse(raw);
-    } catch (error) {
-        throw new Error("Invalid JSON. Please check your JSON format.");
+
+    }catch(error){
+
+        throw new Error(
+            "Invalid JSON. Please check your JSON format."
+        );
+
     }
 
-    if (
+
+    if(
         !data ||
         typeof data !== "object" ||
         Array.isArray(data)
-    ) {
-        throw new Error("JSON must contain an object.");
+    ){
+
+        throw new Error(
+            "JSON must contain an object."
+        );
+
     }
+
 
     return data;
 }
 
 
 /* ============================================================
-   FILL BASIC DATA ON BOTH PAGES
+   HEADER DATA
    ============================================================ */
 
-function fillHeader(data) {
+function fillHeader(data){
 
-    const registration = cleanValue(data.REGISTRATION_NUMBER);
-    const maker = cleanValue(data.MAKER);
-    const model = cleanValue(data.MODEL);
-    const mobile = cleanValue(data.MOBILE_NUMBER);
+    const registration =
+        cleanValue(data.REGISTRATION_NUMBER);
 
-    document.getElementById("p1Registration").textContent = registration;
-    document.getElementById("p1Maker").textContent = maker;
-    document.getElementById("p1Model").textContent = model;
-    document.getElementById("p1Mobile").textContent = mobile;
+    const maker =
+        cleanValue(data.MAKER);
 
-    document.getElementById("p2Registration").textContent = registration;
-    document.getElementById("p2Maker").textContent = maker;
-    document.getElementById("p2Model").textContent = model;
-    document.getElementById("p2Mobile").textContent = mobile;
+    const model =
+        cleanValue(data.MODEL);
 
-    const address = cleanValue(data.ADDRESS);
+    const mobile =
+        cleanValue(data.MOBILE_NUMBER);
 
-    document.getElementById("p1Address").textContent = address;
 
-    if (
-        !Object.prototype.hasOwnProperty.call(data, "ADDRESS") ||
-        !String(address).trim()
-    ) {
-        document.getElementById("p1AddressWrap").style.display = "none";
-    } else {
-        document.getElementById("p1AddressWrap").style.display = "block";
-    }
+    document.getElementById(
+        "p1Registration"
+    ).textContent = registration;
+
+
+    document.getElementById(
+        "p1Maker"
+    ).textContent = maker;
+
+
+    document.getElementById(
+        "p1Model"
+    ).textContent = model;
+
+
+    document.getElementById(
+        "p1Mobile"
+    ).textContent = mobile;
+
+
+    document.getElementById(
+        "p2Registration"
+    ).textContent = registration;
+
+
+    document.getElementById(
+        "p2Maker"
+    ).textContent = maker;
+
+
+    document.getElementById(
+        "p2Model"
+    ).textContent = model;
+
+
+    document.getElementById(
+        "p2Mobile"
+    ).textContent = mobile;
 }
 
 
 /* ============================================================
-   BUILD TWO PAGES
+   BUILD PDF
    ============================================================ */
 
-function buildPDFPages(data) {
+function buildPDFPages(data){
 
     fillHeader(data);
 
+
     /*
-       PAGE 1:
-       Owner + Identity + Engine + Dimensions
+       PAGE 1
     */
 
     let page1 = "";
 
-    const page1Sections = SECTIONS.slice(0, 4);
 
-    page1Sections.forEach(section => {
-        page1 += createSection(
-            section.title,
-            section.number,
-            section.fields,
-            data
-        );
-    });
+    SECTIONS
+        .slice(0,4)
+        .forEach(section => {
 
-    document.getElementById("page1Content").innerHTML = page1;
+            page1 += createSection(
+                section.title,
+                section.number,
+                section.fields,
+                data
+            );
+
+        });
+
+
+    document.getElementById(
+        "page1Content"
+    ).innerHTML = page1;
 
 
     /*
-       PAGE 2:
-       Performance + Registration + Insurance + Additional
+       PAGE 2
     */
 
     let page2 = "";
 
-    const page2Sections = SECTIONS.slice(4);
 
-    page2Sections.forEach(section => {
-        page2 += createSection(
-            section.title,
-            section.number,
-            section.fields,
-            data
-        );
-    });
+    SECTIONS
+        .slice(4)
+        .forEach(section => {
+
+            page2 += createSection(
+                section.title,
+                section.number,
+                section.fields,
+                data
+            );
+
+        });
+
 
     page2 += createUnknownSection(data);
 
-    document.getElementById("page2Content").innerHTML = page2;
+
+    document.getElementById(
+        "page2Content"
+    ).innerHTML = page2;
 }
 
 
@@ -1129,62 +1509,99 @@ function buildPDFPages(data) {
    GENERATE PDF
    ============================================================ */
 
-async function generatePDF() {
+async function generatePDF(){
 
-    const loader = document.getElementById("loader");
+    const loader =
+        document.getElementById("loader");
 
-    try {
 
-        const data = getData();
+    try{
 
-        loader.style.display = "flex";
+        const data =
+            getData();
+
+
+        loader.style.display =
+            "flex";
+
 
         buildPDFPages(data);
 
-        /*
-          Small delay ensures browser finishes
-          rendering all text before canvas capture.
-        */
-        await new Promise(resolve => setTimeout(resolve, 250));
 
-        const page1 = document.getElementById("pdfPage1");
-        const page2 = document.getElementById("pdfPage2");
+        await new Promise(
+            resolve =>
+                setTimeout(resolve,250)
+        );
 
-        const canvas1 = await html2canvas(page1, {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: "#ffffff",
-            width: 794,
-            height: 1123,
-            logging: false
-        });
 
-        const canvas2 = await html2canvas(page2, {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: "#ffffff",
-            width: 794,
-            height: 1123,
-            logging: false
-        });
+        const page1 =
+            document.getElementById("pdfPage1");
 
-        const img1 = canvas1.toDataURL("image/jpeg", 0.96);
-        const img2 = canvas2.toDataURL("image/jpeg", 0.96);
+        const page2 =
+            document.getElementById("pdfPage2");
 
-        const { jsPDF } = window.jspdf;
 
-        const pdf = new jsPDF({
-            orientation: "portrait",
-            unit: "mm",
-            format: "a4",
-            compress: true
-        });
+        const canvas1 =
+            await html2canvas(
+                page1,
+                {
+                    scale:2,
+                    useCORS:true,
+                    backgroundColor:"#ffffff",
+                    width:794,
+                    height:1123,
+                    logging:false
+                }
+            );
+
+
+        const canvas2 =
+            await html2canvas(
+                page2,
+                {
+                    scale:2,
+                    useCORS:true,
+                    backgroundColor:"#ffffff",
+                    width:794,
+                    height:1123,
+                    logging:false
+                }
+            );
+
+
+        const img1 =
+            canvas1.toDataURL(
+                "image/jpeg",
+                .96
+            );
+
+
+        const img2 =
+            canvas2.toDataURL(
+                "image/jpeg",
+                .96
+            );
+
+
+        const { jsPDF } =
+            window.jspdf;
+
+
+        const pdf =
+            new jsPDF({
+                orientation:"portrait",
+                unit:"mm",
+                format:"a4",
+                compress:true
+            });
+
 
         const pageWidth = 210;
         const pageHeight = 297;
 
+
         /*
-          EXACTLY 2 A4 PAGES
+           PAGE 1
         */
 
         pdf.addImage(
@@ -1198,7 +1615,13 @@ async function generatePDF() {
             "FAST"
         );
 
+
+        /*
+           PAGE 2
+        */
+
         pdf.addPage();
+
 
         pdf.addImage(
             img2,
@@ -1211,45 +1634,69 @@ async function generatePDF() {
             "FAST"
         );
 
+
         const registration =
-            cleanValue(data.REGISTRATION_NUMBER)
-                .replace(/[^a-zA-Z0-9_-]/g, "_");
+            cleanValue(
+                data.REGISTRATION_NUMBER
+            )
+            .replace(
+                /[^a-zA-Z0-9_-]/g,
+                "_"
+            );
+
 
         const fileName =
             `Vehicle_Profile_${registration || "Report"}_MRX.pdf`;
 
+
         pdf.save(fileName);
 
-    } catch (error) {
+    }catch(error){
 
         console.error(error);
 
-        alert(error.message || "Unable to generate PDF.");
+        alert(
+            error.message ||
+            "Unable to generate PDF."
+        );
 
-    } finally {
+    }finally{
 
-        loader.style.display = "none";
+        loader.style.display =
+            "none";
     }
 }
 
 
 /* ============================================================
-   FORMAT JSON
+   FORMAT
    ============================================================ */
 
-function formatJSON() {
+function formatJSON(){
 
-    const textarea = document.getElementById("jsonInput");
+    const textarea =
+        document.getElementById("jsonInput");
 
-    try {
 
-        const data = JSON.parse(textarea.value);
+    try{
 
-        textarea.value = JSON.stringify(data, null, 4);
+        const data =
+            JSON.parse(textarea.value);
 
-    } catch {
 
-        alert("Invalid JSON. Please check the format first.");
+        textarea.value =
+            JSON.stringify(
+                data,
+                null,
+                4
+            );
+
+    }catch{
+
+        alert(
+            "Invalid JSON. Please check the format first."
+        );
+
     }
 }
 
@@ -1258,10 +1705,15 @@ function formatJSON() {
    CLEAR
    ============================================================ */
 
-function clearJSON() {
+function clearJSON(){
 
-    document.getElementById("jsonInput").value = "";
-    document.getElementById("jsonInput").focus();
+    const textarea =
+        document.getElementById("jsonInput");
+
+
+    textarea.value = "";
+
+    textarea.focus();
 }
 
 
@@ -1269,20 +1721,26 @@ function clearJSON() {
    CTRL + ENTER
    ============================================================ */
 
-document.getElementById("jsonInput").addEventListener(
-    "keydown",
-    function(event) {
+document
+    .getElementById("jsonInput")
+    .addEventListener(
+        "keydown",
+        function(event){
 
-        if (
-            event.ctrlKey &&
-            event.key === "Enter"
-        ) {
-            event.preventDefault();
-            generatePDF();
+            if(
+                event.ctrlKey &&
+                event.key === "Enter"
+            ){
+
+                event.preventDefault();
+
+                generatePDF();
+
+            }
+
         }
+    );
 
-    }
-);
 </script>
 
 </body>
