@@ -14,16 +14,49 @@
     box-sizing:border-box;
 }
 
+:root{
+    --app-bg:#050b12;
+    --app-panel:#0d1723;
+    --app-border:#27394b;
+
+    --ink:#17232d;
+    --ink-soft:#64737e;
+    --ink-muted:#84919b;
+
+    --line:#d5dce1;
+    --line-soft:#e8ecef;
+
+    --accent:#294359;
+    --accent-soft:#506d84;
+
+    --green:#176b35;
+    --green-bg:#e7f7ec;
+    --green-border:#a9d9b8;
+}
+
+/* =========================================================
+   APP
+   ========================================================= */
+
 body{
     margin:0;
     min-height:100vh;
-    padding:25px 15px;
+    padding:26px 15px;
     font-family:Arial,Helvetica,sans-serif;
     color:#eef3f7;
+
     background:
-        radial-gradient(circle at top left,#162337 0%,transparent 40%),
-        radial-gradient(circle at bottom right,#0b1828 0%,transparent 45%),
-        #050b12;
+        radial-gradient(
+            circle at top left,
+            #17273a 0%,
+            transparent 38%
+        ),
+        radial-gradient(
+            circle at bottom right,
+            #0b1828 0%,
+            transparent 45%
+        ),
+        var(--app-bg);
 }
 
 .app{
@@ -49,23 +82,28 @@ body{
 }
 
 .panel{
-    background:rgba(13,23,35,.92);
+    background:rgba(13,23,35,.94);
     border:1px solid rgba(255,255,255,.08);
     border-radius:16px;
     padding:18px;
-    box-shadow:0 20px 60px rgba(0,0,0,.35);
+    box-shadow:0 20px 60px rgba(0,0,0,.36);
 }
 
 textarea{
     width:100%;
     min-height:400px;
     resize:vertical;
+
     border:1px solid #2b3948;
     border-radius:12px;
+
     padding:16px;
+
     background:#08111b;
     color:#eaf1f7;
+
     outline:none;
+
     font:13px/1.55 Consolas,Monaco,monospace;
 }
 
@@ -86,15 +124,29 @@ button{
     border-radius:9px;
     padding:12px 18px;
     cursor:pointer;
+
     font-weight:700;
     letter-spacing:.3px;
+
     transition:.2s;
+}
+
+button:hover{
+    transform:translateY(-1px);
+    filter:brightness(1.08);
 }
 
 .generate{
     flex:1;
     min-width:220px;
-    background:linear-gradient(135deg,#2e8b57,#1d6d43);
+
+    background:
+        linear-gradient(
+            135deg,
+            #2e8b57,
+            #1d6d43
+        );
+
     color:#fff;
 }
 
@@ -102,12 +154,8 @@ button{
 .clear-btn{
     background:#182534;
     color:#dce6ee;
-    border:1px solid #2a3b4d;
-}
 
-button:hover{
-    transform:translateY(-1px);
-    filter:brightness(1.08);
+    border:1px solid #2a3b4d;
 }
 
 .note{
@@ -116,6 +164,10 @@ button:hover{
     font-size:11px;
     text-align:center;
 }
+
+/* =========================================================
+   PDF STAGE
+   ========================================================= */
 
 #pdfStage{
     position:fixed;
@@ -133,51 +185,69 @@ button:hover{
     height:1123px;
     position:relative;
     overflow:hidden;
-    color:#17212b;
-    font-family:Arial,Helvetica,sans-serif;
+
+    color:var(--ink);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
     background:
         repeating-linear-gradient(
             0deg,
-            rgba(15,23,35,.014) 0px,
-            rgba(15,23,35,.014) 1px,
+            rgba(20,35,48,.016) 0px,
+            rgba(20,35,48,.016) 1px,
             transparent 1px,
             transparent 4px
         ),
-        #fff;
+        #ffffff;
 }
 
 .pdf-page::after{
     content:"";
     position:absolute;
     inset:0;
+
     pointer-events:none;
-    opacity:.30;
+
+    opacity:.24;
+
     background:
         repeating-linear-gradient(
             90deg,
             transparent 0px,
-            transparent 4px,
-            rgba(0,0,0,.012) 4px,
-            rgba(0,0,0,.012) 5px
+            transparent 5px,
+            rgba(0,0,0,.011) 5px,
+            rgba(0,0,0,.011) 6px
         );
 }
 
 .top-line{
     height:6px;
-    background:linear-gradient(
-        90deg,
-        #15283b,
-        #47667f,
-        #15283b
-    );
+
+    background:
+        linear-gradient(
+            90deg,
+            #142636 0%,
+            #526f85 48%,
+            #142636 100%
+        );
 }
+
+/* =========================================================
+   INNER
+   ========================================================= */
 
 .pdf-inner{
     position:relative;
     z-index:1;
+
+    width:100%;
     height:calc(100% - 6px);
-    padding:27px 38px 22px;
+
+    padding:28px 38px 23px;
+
     display:flex;
     flex-direction:column;
 }
@@ -188,127 +258,201 @@ button:hover{
 
 .report-header{
     display:grid;
-    grid-template-columns:1fr auto;
-    gap:25px;
+
+    grid-template-columns:
+        minmax(0,1fr)
+        auto;
+
+    gap:28px;
+
     align-items:end;
-    padding-bottom:17px;
-    border-bottom:1px solid #d3d9de;
+
     position:relative;
+
+    padding-bottom:18px;
+
+    border-bottom:1px solid var(--line);
 }
 
 .report-header::after{
     content:"";
+
     position:absolute;
+
     left:0;
     right:0;
     bottom:4px;
+
     height:1px;
+
     background:
         repeating-linear-gradient(
             90deg,
-            #9ca8b2 0px,
-            #9ca8b2 3px,
+            #98a5af 0px,
+            #98a5af 3px,
             transparent 3px,
-            transparent 7px
+            transparent 8px
         );
 }
 
 .eyebrow{
-    font-size:11px;
-    letter-spacing:3px;
-    font-weight:700;
-    color:#71808e;
     margin-bottom:8px;
+
+    color:#75848f;
+
+    font-size:10px;
+    font-weight:700;
+
+    letter-spacing:3px;
 }
 
 .report-title{
     margin:0;
-    font-size:33px;
-    letter-spacing:1.5px;
-    line-height:1;
+
+    color:#12212d;
+
+    font-size:34px;
+    line-height:.98;
+
     font-weight:800;
-    color:#14212d;
+
+    letter-spacing:1.4px;
 }
 
 .registration{
-    font-size:31px;
-    font-weight:800;
-    letter-spacing:1px;
     color:#0f1e2b;
+
+    font-size:31px;
+
+    line-height:1;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
     text-align:right;
+
     white-space:nowrap;
 }
 
 .reg-label{
-    font-size:9px;
-    letter-spacing:2px;
-    color:#788693;
     margin-bottom:5px;
+
+    color:#7b8994;
+
+    font-size:9px;
+
+    letter-spacing:2px;
+
     text-align:right;
 }
 
 /* =========================================================
-   VEHICLE STRIP
+   VEHICLE IDENTITY STRIP
    ========================================================= */
 
 .vehicle-strip{
     display:grid;
-    grid-template-columns:1fr auto;
+
+    grid-template-columns:
+        minmax(0,1fr)
+        auto;
+
     gap:25px;
+
     align-items:center;
-    padding:17px 0 16px;
-    border-bottom:1px solid #d8dde2;
+
     position:relative;
+
+    padding:17px 0 16px;
+
+    border-bottom:1px solid var(--line);
 }
 
 .vehicle-strip::after{
     content:"";
+
     position:absolute;
+
     left:0;
     right:0;
     bottom:4px;
-    border-bottom:1px dashed #c3cbd2;
+
+    border-bottom:1px dashed #c0c9d0;
 }
 
 .maker{
-    font-size:19px;
-    font-weight:800;
-    letter-spacing:.6px;
     margin-bottom:4px;
+
+    color:#1b2b37;
+
+    font-size:20px;
+
+    line-height:1.15;
+
+    font-weight:800;
+
+    letter-spacing:.6px;
+
     text-transform:uppercase;
 }
 
 .model{
+    color:#667681;
+
     font-size:15px;
-    color:#667581;
-    letter-spacing:.5px;
+
+    line-height:1.25;
+
+    letter-spacing:.7px;
+
     text-transform:uppercase;
 }
 
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
 .mobile-box{
-    min-width:220px;
-    padding:11px 15px;
+    min-width:225px;
+
+    padding:11px 16px;
+
+    border:1px solid var(--green-border);
     border-radius:7px;
-    background:#e7f7ec;
-    border:1px solid #a9d9b8;
-    color:#176b35;
+
+    background:var(--green-bg);
+
+    color:var(--green);
+
     text-align:right;
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.5);
+
+    box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.45);
 }
 
 .mobile-label{
-    font-size:9px;
-    letter-spacing:1.7px;
-    text-transform:uppercase;
-    font-weight:700;
     margin-bottom:4px;
+
     color:#408154;
+
+    font-size:9px;
+
+    font-weight:700;
+
+    letter-spacing:1.8px;
+
+    text-transform:uppercase;
 }
 
 .mobile-value{
     font-size:18px;
+
+    line-height:1.1;
+
     font-weight:800;
-    letter-spacing:.7px;
+
+    letter-spacing:.75px;
 }
 
 /* =========================================================
@@ -316,18 +460,28 @@ button:hover{
    ========================================================= */
 
 .content{
-    margin-top:20px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    column-gap:34px;
-    row-gap:30px;
     flex:1;
+
+    display:grid;
+
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(0,1fr);
+
+    column-gap:34px;
+
+    row-gap:29px;
+
     align-content:start;
+
+    margin-top:21px;
 }
 
 .section{
-    min-width:0;
     position:relative;
+
+    min-width:0;
+
     padding-bottom:12px;
 }
 
@@ -337,80 +491,275 @@ button:hover{
 
 .section::after{
     content:"";
+
     position:absolute;
+
     left:0;
     right:0;
     bottom:0;
+
     height:1px;
+
     background:
         repeating-linear-gradient(
             90deg,
-            #c4ccd3 0px,
-            #c4ccd3 5px,
+            #bcc6cd 0px,
+            #bcc6cd 5px,
             transparent 5px,
             transparent 9px
         );
 }
 
+/* =========================================================
+   SECTION HEADING
+   ========================================================= */
+
 .section-heading{
     display:flex;
+
     align-items:center;
+
     gap:10px;
+
     margin-bottom:10px;
 }
 
 .section-number{
+    color:#8996a0;
+
     font-size:10px;
+
+    line-height:1;
+
     font-weight:800;
-    color:#8795a0;
+
     letter-spacing:1px;
 }
 
 .section-title{
+    color:#2a3c49;
+
     font-size:12px;
-    letter-spacing:2.2px;
+
+    line-height:1;
+
     font-weight:800;
-    text-transform:uppercase;
-    color:#2c3d4b;
+
+    letter-spacing:2px;
+
     white-space:nowrap;
+
+    text-transform:uppercase;
 }
 
 .section-heading::after{
     content:"";
+
     flex:1;
+
     height:2px;
+
     background:
         repeating-linear-gradient(
             90deg,
-            #b8c1c9 0px,
-            #b8c1c9 3px,
+            #b3bec7 0px,
+            #b3bec7 3px,
             transparent 3px,
             transparent 7px
         );
 }
 
+/* =========================================================
+   DATA ROW
+   ========================================================= */
+
 .info-row{
     display:grid;
-    grid-template-columns:44% 56%;
-    min-height:37px;
-    padding:7px 0;
-    border-bottom:1px solid #e5eaed;
+
+    grid-template-columns:
+        43%
+        57%;
+
+    min-height:39px;
+
+    padding:8px 0;
+
     align-items:center;
+
+    border-bottom:1px solid var(--line-soft);
 }
 
 .label{
-    color:#71808d;
+    padding-right:13px;
+
+    color:#71808b;
+
     font-size:11.5px;
+
     line-height:1.3;
-    padding-right:12px;
 }
 
 .value{
     color:#1c2934;
+
     font-size:13.5px;
+
+    line-height:1.4;
+
     font-weight:700;
-    line-height:1.38;
+
     word-break:break-word;
+
+    overflow-wrap:anywhere;
+}
+
+/* =========================================================
+   SPECIAL EMPHASIS
+   ========================================================= */
+
+.key-value .value{
+    color:#152b3d;
+}
+
+.registration-key .value{
+    font-size:14px;
+    letter-spacing:.4px;
+}
+
+.chassis-key .value,
+.engine-key .value{
+    letter-spacing:.35px;
+}
+
+/* =========================================================
+   ADDRESS
+   ========================================================= */
+
+.address-row{
+    grid-column:1 / -1;
+
+    padding-top:10px;
+}
+
+.address-row .label{
+    font-size:11px;
+    letter-spacing:.3px;
+}
+
+.address-row .value{
+    font-size:13px;
+    line-height:1.5;
+}
+
+/* =========================================================
+   DATE / COMPLIANCE BAND
+   ========================================================= */
+
+.date-band{
+    grid-column:1 / -1;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:0;
+
+    margin-top:-2px;
+
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+}
+
+.date-item{
+    min-height:63px;
+
+    padding:11px 14px;
+
+    border-right:1px dashed #c5cdd3;
+}
+
+.date-item:last-child{
+    border-right:0;
+}
+
+.date-caption{
+    margin-bottom:5px;
+
+    color:#7d8b95;
+
+    font-size:9px;
+
+    font-weight:700;
+
+    letter-spacing:1.6px;
+
+    text-transform:uppercase;
+}
+
+.date-value{
+    color:#1c2d39;
+
+    font-size:14px;
+
+    line-height:1.2;
+
+    font-weight:800;
+}
+
+/* =========================================================
+   PAGE 2 SPECIAL SUMMARY
+   ========================================================= */
+
+.spec-band{
+    grid-column:1 / -1;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:0;
+
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+}
+
+.spec-item{
+    min-height:64px;
+
+    padding:11px 14px;
+
+    border-right:1px dashed #c5cdd3;
+}
+
+.spec-item:last-child{
+    border-right:0;
+}
+
+.spec-caption{
+    margin-bottom:5px;
+
+    color:#7d8b95;
+
+    font-size:9px;
+
+    font-weight:700;
+
+    letter-spacing:1.5px;
+
+    text-transform:uppercase;
+}
+
+.spec-value{
+    color:#1c2d39;
+
+    font-size:14px;
+
+    line-height:1.2;
+
+    font-weight:800;
+
     overflow-wrap:anywhere;
 }
 
@@ -419,50 +768,64 @@ button:hover{
    ========================================================= */
 
 .pdf-footer{
-    margin-top:auto;
-    padding-top:12px;
-    border-top:1px solid #d4dbe0;
     position:relative;
+
     display:grid;
-    grid-template-columns:1fr auto;
+
+    grid-template-columns:
+        1fr
+        auto;
+
     gap:20px;
+
     align-items:center;
+
+    margin-top:auto;
+
+    padding-top:13px;
+
+    border-top:1px solid var(--line);
 }
 
 .pdf-footer::before{
     content:"";
+
     position:absolute;
+
     left:0;
     right:0;
     top:4px;
-    border-top:1px dashed #c4ccd2;
+
+    border-top:1px dashed #c3ccd2;
 }
 
 .prepared{
+    color:#7b8993;
+
     font-size:8.5px;
-    color:#788793;
+
     letter-spacing:1px;
+
     text-transform:uppercase;
 }
 
 .prepared strong{
-    color:#273641;
+    color:#273742;
+
     font-size:10px;
 }
 
 .page-no{
+    color:#7e8b95;
+
     font-size:8.5px;
-    color:#7d8994;
+
     letter-spacing:1px;
 }
 
 /* =========================================================
    PAGE 2
    ========================================================= */
-
-.page-2 .pdf-inner{
-    padding-top:27px;
-}
 
 .page-2 .report-title{
     font-size:29px;
@@ -473,35 +836,37 @@ button:hover{
 }
 
 .page-2 .content{
-    margin-top:20px;
-    row-gap:31px;
+    margin-top:21px;
+    row-gap:30px;
 }
 
 .page-2 .info-row{
-    min-height:39px;
+    min-height:40px;
     padding:8px 0;
-}
-
-.page-2 .label{
-    font-size:11.5px;
 }
 
 .page-2 .value{
     font-size:13.5px;
 }
 
-.page-2 .section-title{
-    font-size:12px;
-}
+/* =========================================================
+   PAGE 2 NOTE
+   ========================================================= */
 
-.page-2-note{
+.page-note{
     margin-top:9px;
+
     padding-top:7px;
-    border-top:1px dashed #c5cdd3;
-    color:#8a959e;
+
+    border-top:1px dashed #c6ced4;
+
+    color:#8a969f;
+
     font-size:8.5px;
-    text-align:right;
+
     letter-spacing:.7px;
+
+    text-align:right;
 }
 
 /* =========================================================
@@ -510,37 +875,51 @@ button:hover{
 
 .loader-overlay{
     position:fixed;
+
     inset:0;
-    background:rgba(3,8,13,.78);
-    backdrop-filter:blur(5px);
-    display:none;
-    justify-content:center;
-    align-items:center;
+
     z-index:9999;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    background:rgba(3,8,13,.78);
+
+    backdrop-filter:blur(5px);
 }
 
 .loader-box{
-    background:#101c28;
+    min-width:235px;
+
+    padding:25px 30px;
+
     border:1px solid #2d4053;
     border-radius:14px;
-    padding:25px 30px;
+
+    background:#101c28;
+
     text-align:center;
-    min-width:230px;
 }
 
 .spinner{
     width:35px;
     height:35px;
+
+    margin:0 auto 13px;
+
     border:3px solid #33485d;
     border-top-color:#67c58a;
+
     border-radius:50%;
+
     animation:spin 1s linear infinite;
-    margin:auto auto 13px;
 }
 
 .loader-text{
-    font-size:13px;
     color:#dce8f0;
+    font-size:13px;
 }
 
 @keyframes spin{
@@ -548,6 +927,10 @@ button:hover{
         transform:rotate(360deg);
     }
 }
+
+/* =========================================================
+   MOBILE APP
+   ========================================================= */
 
 @media(max-width:700px){
 
@@ -625,7 +1008,12 @@ button:hover{
 </div>
 
 
+<!-- =========================================================
+     PDF STAGE
+     ========================================================= -->
+
 <div id="pdfStage">
+
 
     <!-- =====================================================
          PAGE 1
@@ -640,9 +1028,13 @@ button:hover{
 
         <div class="pdf-inner">
 
+
+            <!-- HEADER -->
+
             <div class="report-header">
 
                 <div>
+
                     <div class="eyebrow">
                         VEHICLE DOCUMENTATION
                     </div>
@@ -650,7 +1042,9 @@ button:hover{
                     <h1 class="report-title">
                         VEHICLE PROFILE
                     </h1>
+
                 </div>
+
 
                 <div>
 
@@ -669,6 +1063,8 @@ button:hover{
 
             </div>
 
+
+            <!-- VEHICLE IDENTITY -->
 
             <div class="vehicle-strip">
 
@@ -709,11 +1105,15 @@ button:hover{
             </div>
 
 
+            <!-- DETAILS -->
+
             <div
                 class="content"
                 id="page1Content"
             ></div>
 
+
+            <!-- FOOTER -->
 
             <div class="pdf-footer">
 
@@ -745,6 +1145,9 @@ button:hover{
 
         <div class="pdf-inner">
 
+
+            <!-- HEADER -->
+
             <div class="report-header">
 
                 <div>
@@ -758,6 +1161,7 @@ button:hover{
                     </h1>
 
                 </div>
+
 
                 <div>
 
@@ -776,6 +1180,8 @@ button:hover{
 
             </div>
 
+
+            <!-- VEHICLE IDENTITY -->
 
             <div class="vehicle-strip">
 
@@ -816,16 +1222,20 @@ button:hover{
             </div>
 
 
+            <!-- DETAILS -->
+
             <div
                 class="content"
                 id="page2Content"
             ></div>
 
 
-            <div class="page-2-note">
+            <div class="page-note">
                 INFORMATIONAL USE
             </div>
 
+
+            <!-- FOOTER -->
 
             <div class="pdf-footer">
 
@@ -845,6 +1255,10 @@ button:hover{
 
 </div>
 
+
+<!-- =========================================================
+     LOADER
+     ========================================================= -->
 
 <div
     class="loader-overlay"
@@ -872,56 +1286,128 @@ button:hover{
 
 const LABELS = {
 
-    REGISTRATION_NUMBER:"Registration Number",
-    OWNER_NAME:"Owner Name",
-    MOBILE_NUMBER:"Mobile Number",
+    REGISTRATION_NUMBER:
+        "Registration Number",
 
-    MAKER:"Maker",
-    MODEL:"Model",
-    VEHICLE_CATEGORY:"Vehicle Category",
-    VEHICLE_CLASS:"Vehicle Class",
-    BODY_TYPE:"Body Type",
-    COLOUR:"Colour",
-    FUEL_TYPE:"Fuel Type",
-    ENGINE_NUMBER:"Engine Number",
-    CHASSIS_NUMBER:"Chassis Number",
+    OWNER_NAME:
+        "Owner Name",
 
-    MANUFACTURING_MONTH:"Manufacturing Month",
-    SEATING_CAPACITY:"Seating Capacity",
-    CUBIC_CAPACITY:"Cubic Capacity",
-    UNLADEN_WEIGHT:"Unladen Weight",
-    GROSS_VEHICLE_WEIGHT:"Gross Vehicle Weight",
-    WHEELBASE:"Wheelbase",
+    MOBILE_NUMBER:
+        "Mobile Number",
 
-    RTO_NAME:"RTO Name",
-    STATE:"State",
-    PINCODE:"Pincode",
+    MAKER:
+        "Maker",
 
-    TRANSMISSION_TYPE:"Transmission Type",
-    MAX_POWER:"Maximum Power",
-    MAX_TORQUE:"Maximum Torque",
-    NO_OF_CYLINDERS:"Number of Cylinders",
-    FUEL_TANK_CAPACITY:"Fuel Tank Capacity",
-    BOOT_SPACE:"Boot Space",
-    TYRE_SIZE:"Tyre Size",
+    MODEL:
+        "Model",
 
-    INSURANCE_COMPANY:"Insurance Company",
-    INSURANCE_POLICY_NUMBER:"Insurance Policy Number",
-    INSURANCE_VALIDITY:"Insurance Validity",
-    PUC_NUMBER:"PUC Number",
-    PUC_UPTO:"PUC Valid Up To",
-    HYPOTHECATION:"Hypothecation",
+    VEHICLE_CATEGORY:
+        "Vehicle Category",
 
-    REGISTRATION_DATE:"Registration Date",
-    REGISTRATION_VALIDITY:"Registration Validity",
+    VEHICLE_CLASS:
+        "Vehicle Class",
 
-    ADDRESS:"Address",
+    BODY_TYPE:
+        "Body Type",
 
-    EMISSION_NORM:"Emission Norm",
-    TAX_UPTO:"Tax Up To",
-    VEHICLE_AGE:"Vehicle Age",
+    COLOUR:
+        "Colour",
 
-    DETAIL_BY:"Detail By"
+    FUEL_TYPE:
+        "Fuel Type",
+
+    ENGINE_NUMBER:
+        "Engine Number",
+
+    CHASSIS_NUMBER:
+        "Chassis Number",
+
+    MANUFACTURING_MONTH:
+        "Manufacturing Month",
+
+    SEATING_CAPACITY:
+        "Seating Capacity",
+
+    CUBIC_CAPACITY:
+        "Cubic Capacity",
+
+    UNLADEN_WEIGHT:
+        "Unladen Weight",
+
+    GROSS_VEHICLE_WEIGHT:
+        "Gross Vehicle Weight",
+
+    WHEELBASE:
+        "Wheelbase",
+
+    RTO_NAME:
+        "RTO Name",
+
+    STATE:
+        "State",
+
+    PINCODE:
+        "Pincode",
+
+    TRANSMISSION_TYPE:
+        "Transmission Type",
+
+    MAX_POWER:
+        "Maximum Power",
+
+    MAX_TORQUE:
+        "Maximum Torque",
+
+    NO_OF_CYLINDERS:
+        "Number of Cylinders",
+
+    FUEL_TANK_CAPACITY:
+        "Fuel Tank Capacity",
+
+    BOOT_SPACE:
+        "Boot Space",
+
+    TYRE_SIZE:
+        "Tyre Size",
+
+    INSURANCE_COMPANY:
+        "Insurance Company",
+
+    INSURANCE_POLICY_NUMBER:
+        "Insurance Policy Number",
+
+    INSURANCE_VALIDITY:
+        "Insurance Validity",
+
+    PUC_NUMBER:
+        "PUC Number",
+
+    PUC_UPTO:
+        "PUC Valid Up To",
+
+    HYPOTHECATION:
+        "Hypothecation",
+
+    REGISTRATION_DATE:
+        "Registration Date",
+
+    REGISTRATION_VALIDITY:
+        "Registration Validity",
+
+    ADDRESS:
+        "Address",
+
+    EMISSION_NORM:
+        "Emission Norm",
+
+    TAX_UPTO:
+        "Tax Up To",
+
+    VEHICLE_AGE:
+        "Vehicle Age",
+
+    DETAIL_BY:
+        "Detail By"
 };
 
 
@@ -930,17 +1416,21 @@ const LABELS = {
    ============================================================ */
 
 const EXCLUDED_FIELDS = new Set([
+
     "FATHER_NAME",
+
     "OWNER_NUMBER",
+
     "DETAIL_BY"
+
 ]);
 
 
 /* ============================================================
-   SECTION DEFINITIONS
+   PAGE GROUPS
    ============================================================ */
 
-const SECTIONS = [
+const PAGE1_SECTIONS = [
 
     {
         number:"01",
@@ -991,7 +1481,11 @@ const SECTIONS = [
             "BOOT_SPACE",
             "TYRE_SIZE"
         ]
-    },
+    }
+];
+
+
+const PAGE2_SECTIONS = [
 
     {
         number:"05",
@@ -1041,7 +1535,7 @@ const SECTIONS = [
 
 
 /* ============================================================
-   HELPERS
+   HELPER FUNCTIONS
    ============================================================ */
 
 function escapeHTML(value){
@@ -1088,7 +1582,44 @@ function cleanValue(value){
 
 
 /* ============================================================
-   SECTION GENERATOR
+   SPECIAL ROW CLASS
+   ============================================================ */
+
+function getRowClass(key){
+
+    const classes = ["info-row"];
+
+    if(key === "REGISTRATION_NUMBER"){
+        classes.push(
+            "key-value",
+            "registration-key"
+        );
+    }
+
+    if(key === "ENGINE_NUMBER"){
+        classes.push(
+            "key-value",
+            "engine-key"
+        );
+    }
+
+    if(key === "CHASSIS_NUMBER"){
+        classes.push(
+            "key-value",
+            "chassis-key"
+        );
+    }
+
+    if(key === "ADDRESS"){
+        classes.push("address-row");
+    }
+
+    return classes.join(" ");
+}
+
+
+/* ============================================================
+   CREATE SECTION
    ============================================================ */
 
 function createSection(
@@ -1099,10 +1630,15 @@ function createSection(
 ){
 
     const availableFields =
-        fields.filter(key =>
-            Object.prototype.hasOwnProperty.call(data,key) &&
-            !EXCLUDED_FIELDS.has(key)
+        fields.filter(
+            key =>
+                Object.prototype.hasOwnProperty.call(
+                    data,
+                    key
+                ) &&
+                !EXCLUDED_FIELDS.has(key)
         );
+
 
     if(!availableFields.length){
         return "";
@@ -1110,6 +1646,7 @@ function createSection(
 
 
     let html = `
+
         <section class="section">
 
             <div class="section-heading">
@@ -1130,14 +1667,18 @@ function createSection(
 
         html += `
 
-            <div class="info-row">
+            <div class="${getRowClass(key)}">
 
                 <div class="label">
-                    ${escapeHTML(prettyLabel(key))}
+                    ${escapeHTML(
+                        prettyLabel(key)
+                    )}
                 </div>
 
                 <div class="value">
-                    ${escapeHTML(cleanValue(data[key]))}
+                    ${escapeHTML(
+                        cleanValue(data[key])
+                    )}
                 </div>
 
             </div>
@@ -1157,7 +1698,7 @@ function createSection(
 
 
 /* ============================================================
-   UNKNOWN / FUTURE FIELDS
+   UNKNOWN FIELDS
    ============================================================ */
 
 function getUnknownFields(data){
@@ -1165,26 +1706,28 @@ function getUnknownFields(data){
     const knownKeys =
         new Set([
             ...Object.keys(LABELS),
+
             "FATHER_NAME",
+
             "OWNER_NUMBER",
+
             "DETAIL_BY"
         ]);
 
-    return Object.keys(data).filter(key =>
-        !knownKeys.has(key) &&
-        !EXCLUDED_FIELDS.has(key)
+
+    return Object.keys(data).filter(
+        key =>
+            !knownKeys.has(key) &&
+            !EXCLUDED_FIELDS.has(key)
     );
 }
 
-
-/* ============================================================
-   UNKNOWN SECTION
-   ============================================================ */
 
 function createUnknownSection(data){
 
     const unknown =
         getUnknownFields(data);
+
 
     if(!unknown.length){
         return "";
@@ -1216,11 +1759,15 @@ function createUnknownSection(data){
             <div class="info-row">
 
                 <div class="label">
-                    ${escapeHTML(prettyLabel(key))}
+                    ${escapeHTML(
+                        prettyLabel(key)
+                    )}
                 </div>
 
                 <div class="value">
-                    ${escapeHTML(cleanValue(data[key]))}
+                    ${escapeHTML(
+                        cleanValue(data[key])
+                    )}
                 </div>
 
             </div>
@@ -1240,6 +1787,142 @@ function createUnknownSection(data){
 
 
 /* ============================================================
+   PAGE 2 PREMIUM SPEC BAND
+   ============================================================ */
+
+function createSpecBand(data){
+
+    const items = [
+
+        [
+            "FUEL TYPE",
+            data.FUEL_TYPE
+        ],
+
+        [
+            "TRANSMISSION",
+            data.TRANSMISSION_TYPE
+        ],
+
+        [
+            "POWER",
+            data.MAX_POWER
+        ]
+
+    ];
+
+
+    const available =
+        items.filter(
+            item =>
+                item[1] !== undefined &&
+                item[1] !== null
+        );
+
+
+    if(!available.length){
+        return "";
+    }
+
+
+    return `
+
+        <div class="spec-band">
+
+            ${available.map(
+                item => `
+
+                    <div class="spec-item">
+
+                        <div class="spec-caption">
+                            ${escapeHTML(item[0])}
+                        </div>
+
+                        <div class="spec-value">
+                            ${escapeHTML(
+                                cleanValue(item[1])
+                            )}
+                        </div>
+
+                    </div>
+
+                `
+            ).join("")}
+
+        </div>
+    `;
+}
+
+
+/* ============================================================
+   PAGE 2 DATE BAND
+   ============================================================ */
+
+function createDateBand(data){
+
+    const items = [
+
+        [
+            "REGISTRATION DATE",
+            data.REGISTRATION_DATE
+        ],
+
+        [
+            "REGISTRATION VALIDITY",
+            data.REGISTRATION_VALIDITY
+        ],
+
+        [
+            "TAX VALID UP TO",
+            data.TAX_UPTO
+        ]
+
+    ];
+
+
+    const available =
+        items.filter(
+            item =>
+                item[1] !== undefined &&
+                item[1] !== null
+        );
+
+
+    if(!available.length){
+        return "";
+    }
+
+
+    return `
+
+        <div class="date-band">
+
+            ${available.map(
+                item => `
+
+                    <div class="date-item">
+
+                        <div class="date-caption">
+                            ${escapeHTML(item[0])}
+                        </div>
+
+                        <div class="date-value">
+                            ${escapeHTML(
+                                cleanValue(item[1])
+                            )}
+                        </div>
+
+                    </div>
+
+                `
+            ).join("")}
+
+        </div>
+    `;
+}
+
+
+/* ============================================================
    READ JSON
    ============================================================ */
 
@@ -1247,15 +1930,17 @@ function getData(){
 
     const raw =
         document
-        .getElementById("jsonInput")
-        .value
-        .trim();
+            .getElementById("jsonInput")
+            .value
+            .trim();
 
 
     if(!raw){
+
         throw new Error(
             "Please paste JSON data first."
         );
+
     }
 
 
@@ -1264,7 +1949,8 @@ function getData(){
 
     try{
 
-        data = JSON.parse(raw);
+        data =
+            JSON.parse(raw);
 
     }catch(error){
 
@@ -1299,7 +1985,9 @@ function getData(){
 function fillHeader(data){
 
     const registration =
-        cleanValue(data.REGISTRATION_NUMBER);
+        cleanValue(
+            data.REGISTRATION_NUMBER
+        );
 
     const maker =
         cleanValue(data.MAKER);
@@ -1313,103 +2001,131 @@ function fillHeader(data){
 
     document.getElementById(
         "p1Registration"
-    ).textContent = registration;
+    ).textContent =
+        registration;
 
 
     document.getElementById(
         "p1Maker"
-    ).textContent = maker;
+    ).textContent =
+        maker;
 
 
     document.getElementById(
         "p1Model"
-    ).textContent = model;
+    ).textContent =
+        model;
 
 
     document.getElementById(
         "p1Mobile"
-    ).textContent = mobile;
+    ).textContent =
+        mobile;
 
 
     document.getElementById(
         "p2Registration"
-    ).textContent = registration;
+    ).textContent =
+        registration;
 
 
     document.getElementById(
         "p2Maker"
-    ).textContent = maker;
+    ).textContent =
+        maker;
 
 
     document.getElementById(
         "p2Model"
-    ).textContent = model;
+    ).textContent =
+        model;
 
 
     document.getElementById(
         "p2Mobile"
-    ).textContent = mobile;
+    ).textContent =
+        mobile;
 }
 
 
 /* ============================================================
-   BUILD PAGES
+   BUILD PAGE 1
+   ============================================================ */
+
+function buildPage1(data){
+
+    let html = "";
+
+
+    PAGE1_SECTIONS.forEach(
+        section => {
+
+            html += createSection(
+                section.title,
+                section.number,
+                section.fields,
+                data
+            );
+
+        }
+    );
+
+
+    document.getElementById(
+        "page1Content"
+    ).innerHTML = html;
+}
+
+
+/* ============================================================
+   BUILD PAGE 2
+   ============================================================ */
+
+function buildPage2(data){
+
+    let html = "";
+
+
+    html += createSpecBand(data);
+
+
+    PAGE2_SECTIONS.forEach(
+        section => {
+
+            html += createSection(
+                section.title,
+                section.number,
+                section.fields,
+                data
+            );
+
+        }
+    );
+
+
+    html += createDateBand(data);
+
+
+    html += createUnknownSection(data);
+
+
+    document.getElementById(
+        "page2Content"
+    ).innerHTML = html;
+}
+
+
+/* ============================================================
+   BUILD BOTH PAGES
    ============================================================ */
 
 function buildPDFPages(data){
 
     fillHeader(data);
 
+    buildPage1(data);
 
-    /* PAGE 1 */
-
-    let page1 = "";
-
-
-    SECTIONS
-        .slice(0,4)
-        .forEach(section => {
-
-            page1 += createSection(
-                section.title,
-                section.number,
-                section.fields,
-                data
-            );
-
-        });
-
-
-    document.getElementById(
-        "page1Content"
-    ).innerHTML = page1;
-
-
-    /* PAGE 2 */
-
-    let page2 = "";
-
-
-    SECTIONS
-        .slice(4)
-        .forEach(section => {
-
-            page2 += createSection(
-                section.title,
-                section.number,
-                section.fields,
-                data
-            );
-
-        });
-
-
-    page2 += createUnknownSection(data);
-
-
-    document.getElementById(
-        "page2Content"
-    ).innerHTML = page2;
+    buildPage2(data);
 }
 
 
@@ -1438,15 +2154,23 @@ async function generatePDF(){
 
         await new Promise(
             resolve =>
-                setTimeout(resolve,250)
+                setTimeout(
+                    resolve,
+                    300
+                )
         );
 
 
         const page1 =
-            document.getElementById("pdfPage1");
+            document.getElementById(
+                "pdfPage1"
+            );
+
 
         const page2 =
-            document.getElementById("pdfPage2");
+            document.getElementById(
+                "pdfPage2"
+            );
 
 
         const canvas1 =
@@ -1454,10 +2178,15 @@ async function generatePDF(){
                 page1,
                 {
                     scale:2,
+
                     useCORS:true,
+
                     backgroundColor:"#ffffff",
+
                     width:794,
+
                     height:1123,
+
                     logging:false
                 }
             );
@@ -1468,10 +2197,15 @@ async function generatePDF(){
                 page2,
                 {
                     scale:2,
+
                     useCORS:true,
+
                     backgroundColor:"#ffffff",
+
                     width:794,
+
                     height:1123,
+
                     logging:false
                 }
             );
@@ -1480,14 +2214,14 @@ async function generatePDF(){
         const img1 =
             canvas1.toDataURL(
                 "image/jpeg",
-                .96
+                0.97
             );
 
 
         const img2 =
             canvas2.toDataURL(
                 "image/jpeg",
-                .96
+                0.97
             );
 
 
@@ -1497,16 +2231,27 @@ async function generatePDF(){
 
         const pdf =
             new jsPDF({
-                orientation:"portrait",
-                unit:"mm",
-                format:"a4",
-                compress:true
+
+                orientation:
+                    "portrait",
+
+                unit:
+                    "mm",
+
+                format:
+                    "a4",
+
+                compress:
+                    true
             });
 
 
         const pageWidth = 210;
+
         const pageHeight = 297;
 
+
+        /* PAGE 1 */
 
         pdf.addImage(
             img1,
@@ -1519,6 +2264,8 @@ async function generatePDF(){
             "FAST"
         );
 
+
+        /* PAGE 2 */
 
         pdf.addPage();
 
@@ -1551,14 +2298,17 @@ async function generatePDF(){
 
         pdf.save(fileName);
 
+
     }catch(error){
 
         console.error(error);
+
 
         alert(
             error.message ||
             "Unable to generate PDF."
         );
+
 
     }finally{
 
@@ -1575,13 +2325,17 @@ async function generatePDF(){
 function formatJSON(){
 
     const textarea =
-        document.getElementById("jsonInput");
+        document.getElementById(
+            "jsonInput"
+        );
 
 
     try{
 
         const data =
-            JSON.parse(textarea.value);
+            JSON.parse(
+                textarea.value
+            );
 
 
         textarea.value =
@@ -1590,6 +2344,7 @@ function formatJSON(){
                 null,
                 4
             );
+
 
     }catch{
 
@@ -1608,7 +2363,9 @@ function formatJSON(){
 function clearJSON(){
 
     const textarea =
-        document.getElementById("jsonInput");
+        document.getElementById(
+            "jsonInput"
+        );
 
 
     textarea.value = "";
