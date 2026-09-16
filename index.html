@@ -4,36 +4,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Premium Vehicle Report Generator</title>
+
+<title>Premium Vehicle Report</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+    box-sizing:border-box;
+}
 
 :root{
-    --bg:#07101d;
-    --panel:#0c1727;
-    --panel2:#111f32;
-    --border:rgba(255,255,255,.09);
-    --text:#edf5ff;
-    --muted:#8ea2ba;
-    --accent:#4da3ff;
-    --accent2:#755cff;
-    --green:#35d99b;
-    --red:#ff6879;
+    --bg:#07111d;
+    --panel:#0d1929;
+    --text:#eef5ff;
+    --muted:#91a4bb;
+    --line:rgba(255,255,255,.09);
+    --blue:#579eff;
+    --purple:#7259ed;
 }
 
 body{
     margin:0;
     min-height:100vh;
     background:
-        radial-gradient(circle at 10% 0%,rgba(77,163,255,.13),transparent 30%),
-        radial-gradient(circle at 90% 10%,rgba(117,92,255,.13),transparent 30%),
-        linear-gradient(135deg,#050b13,#081525,#050b13);
+        radial-gradient(
+            circle at 10% 0%,
+            rgba(87,158,255,.14),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(114,89,237,.13),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #050b13,
+            #091626 55%,
+            #050b13
+        );
     color:var(--text);
-    font-family:Inter,Arial,Helvetica,sans-serif;
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
 }
 
 .app{
@@ -42,10 +63,15 @@ body{
     padding:35px 0 60px;
 }
 
-.top{
+
+/* =========================================================
+   APPLICATION HEADER
+========================================================= */
+
+.topbar{
     display:flex;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
     margin-bottom:22px;
 }
 
@@ -61,15 +87,25 @@ body{
     border-radius:14px;
     display:grid;
     place-items:center;
-    font-size:16px;
     font-weight:900;
-    background:linear-gradient(135deg,var(--accent),var(--accent2));
-    box-shadow:0 12px 35px rgba(77,163,255,.25);
+    font-size:15px;
+    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--purple)
+        );
+
+    box-shadow:
+        0 12px 35px rgba(70,120,240,.25);
 }
 
 .brand h1{
     margin:0;
     font-size:20px;
+    letter-spacing:-.4px;
 }
 
 .brand p{
@@ -80,90 +116,130 @@ body{
 
 .badge{
     padding:8px 13px;
-    border:1px solid var(--border);
-    background:rgba(255,255,255,.04);
-    border-radius:50px;
+    border-radius:30px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.035);
+    color:#a9bbcf;
     font-size:10px;
-    color:#afc1d6;
+    letter-spacing:.4px;
 }
+
+
+/* =========================================================
+   EDITOR
+========================================================= */
 
 .editor{
-    background:rgba(10,22,37,.88);
-    border:1px solid var(--border);
-    border-radius:23px;
-    padding:22px;
-    box-shadow:0 25px 80px rgba(0,0,0,.35);
-    backdrop-filter:blur(15px);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.055),
+            rgba(255,255,255,.018)
+        );
+
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:21px;
+
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.35);
+
+    backdrop-filter:blur(18px);
 }
 
-.editor h2{
+.editor-title{
+    margin-bottom:14px;
+}
+
+.editor-title h2{
     margin:0;
     font-size:17px;
 }
 
-.editor p{
-    margin:6px 0 15px;
+.editor-title p{
+    margin:6px 0 0;
     color:var(--muted);
     font-size:12px;
 }
 
 textarea{
     width:100%;
-    min-height:430px;
+    min-height:420px;
     resize:vertical;
-    padding:18px;
-    border-radius:15px;
-    outline:none;
+
+    background:#050c15;
+    color:#dbeaff;
+
     border:1px solid rgba(255,255,255,.08);
-    background:#050c16;
-    color:#dcecff;
-    font-family:Consolas,monospace;
+    border-radius:14px;
+
+    outline:none;
+
+    padding:17px;
+
+    font-family:
+        Consolas,
+        "SFMono-Regular",
+        monospace;
+
     font-size:12px;
     line-height:1.6;
 }
 
 textarea:focus{
-    border-color:rgba(77,163,255,.5);
-    box-shadow:0 0 0 4px rgba(77,163,255,.07);
+    border-color:rgba(87,158,255,.48);
+
+    box-shadow:
+        0 0 0 4px rgba(87,158,255,.06);
 }
 
 .actions{
+    margin-top:14px;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
+
     gap:10px;
-    margin-top:14px;
     flex-wrap:wrap;
 }
 
-.action-group{
+.action-buttons{
     display:flex;
     gap:8px;
 }
 
 button{
-    border:0;
-    cursor:pointer;
     font-family:inherit;
+    cursor:pointer;
 }
 
 .btn{
+    border:0;
+    border-radius:10px;
     padding:12px 17px;
-    border-radius:11px;
     font-size:12px;
     font-weight:800;
 }
 
 .primary{
     color:white;
-    background:linear-gradient(135deg,#428ff2,#7159ef);
-    box-shadow:0 10px 28px rgba(70,100,240,.22);
+
+    background:
+        linear-gradient(
+            135deg,
+            #428ff3,
+            #7159ef
+        );
+
+    box-shadow:
+        0 10px 25px rgba(70,90,230,.2);
 }
 
 .secondary{
-    color:#d5e5f7;
-    background:rgba(255,255,255,.05);
-    border:1px solid var(--border);
+    color:#d4e4f5;
+    background:rgba(255,255,255,.045);
+    border:1px solid var(--line);
 }
 
 #status{
@@ -171,49 +247,78 @@ button{
     font-size:11px;
 }
 
-#status.ok{color:var(--green)}
-#status.error{color:var(--red)}
+#status.ok{
+    color:#42d99b;
+}
+
+#status.error{
+    color:#ff6879;
+}
+
+
+/* =========================================================
+   LOADER
+========================================================= */
 
 .loader{
     position:fixed;
     inset:0;
+
     display:none;
     align-items:center;
     justify-content:center;
-    background:rgba(2,6,12,.8);
-    backdrop-filter:blur(7px);
+
+    background:rgba(2,6,12,.82);
+    backdrop-filter:blur(8px);
+
     z-index:99999;
 }
 
-.loader.show{display:flex}
+.loader.show{
+    display:flex;
+}
 
 .loader-box{
-    background:#0d1b2d;
-    border:1px solid var(--border);
-    padding:25px;
-    border-radius:18px;
+    min-width:260px;
+
+    background:#0d1a2c;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:17px;
+
+    padding:24px;
+
     text-align:center;
+
+    color:white;
 }
 
 .spinner{
-    width:32px;
-    height:32px;
+    width:31px;
+    height:31px;
+
     margin:0 auto 13px;
+
     border-radius:50%;
+
     border:3px solid rgba(255,255,255,.12);
-    border-top-color:#5aa8ff;
-    animation:spin .75s linear infinite;
+    border-top-color:#5ba5ff;
+
+    animation:
+        spin .75s linear infinite;
 }
 
 @keyframes spin{
-    to{transform:rotate(360deg)}
+    to{
+        transform:rotate(360deg);
+    }
 }
 
 
-/* ======================================================
-   PDF AREA
-   EXACT A4 RATIO
-====================================================== */
+/* =========================================================
+   PDF
+========================================================= */
 
 #pdfRoot{
     position:absolute;
@@ -221,327 +326,584 @@ button{
     top:0;
 }
 
+
+/*
+   EXACT A4 PIXEL SIZE
+
+   794 x 1123
+*/
+
 .pdf{
     width:794px;
     height:1123px;
-    background:#f4f7fb;
-    color:#162238;
+
     position:relative;
     overflow:hidden;
-    font-family:Arial,Helvetica,sans-serif;
+
+    background:#fbfaf7;
+
+    color:#172133;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 }
 
-/* Top accent */
 
-.pdf:before{
+/* =========================================================
+   PAPER TEXTURE
+========================================================= */
+
+.pdf:after{
+
     content:"";
+
     position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    height:6px;
-    background:linear-gradient(90deg,#1769d1,#5c4ce5,#1769d1);
+    inset:0;
+
+    pointer-events:none;
+
+    opacity:.035;
+
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            rgba(20,30,40,.8) 0,
+            rgba(20,30,40,.8) 1px,
+            transparent 1px,
+            transparent 4px
+        );
+
 }
 
-/* Header */
+
+/* =========================================================
+   TOP ACCENT
+========================================================= */
+
+.top-line{
+    height:5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #172a43 0%,
+            #438eea 38%,
+            #7259e8 65%,
+            #172a43 100%
+        );
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
 
 .pdf-header{
-    height:145px;
-    padding:27px 32px 20px;
+    height:132px;
+
+    padding:23px 34px 18px;
+
     background:
-        linear-gradient(135deg,#091728,#122a47);
+        linear-gradient(
+            135deg,
+            #0a1728,
+            #102842
+        );
+
     color:white;
+
     position:relative;
+
     overflow:hidden;
 }
 
-.pdf-header:after{
+.pdf-header:before{
+
     content:"";
+
     position:absolute;
-    width:330px;
-    height:330px;
+
+    width:420px;
+    height:420px;
+
+    border:1px solid rgba(255,255,255,.055);
+
     border-radius:50%;
-    right:-110px;
-    top:-190px;
-    border:1px solid rgba(255,255,255,.08);
+
+    right:-190px;
+    top:-275px;
+
     box-shadow:
-        0 0 0 35px rgba(255,255,255,.018),
-        0 0 0 70px rgba(255,255,255,.014);
+        0 0 0 25px rgba(255,255,255,.012),
+        0 0 0 50px rgba(255,255,255,.009),
+        0 0 0 75px rgba(255,255,255,.006);
 }
 
-.header-content{
+.header-inner{
     position:relative;
     z-index:2;
+
     display:flex;
+
     justify-content:space-between;
-    gap:25px;
+
+    align-items:flex-start;
 }
 
-.small-title{
-    color:#91b8df;
-    font-size:8px;
-    letter-spacing:2px;
-    text-transform:uppercase;
-    font-weight:bold;
-}
-
-.pdf-title{
-    margin-top:7px;
-    font-size:27px;
-    font-weight:900;
-    letter-spacing:-.8px;
-}
-
-.pdf-subtitle{
-    margin-top:6px;
-    color:#9db1c8;
-    font-size:9px;
-}
-
-.plate{
-    width:185px;
-    height:58px;
-    background:#f6f7f8;
-    color:#101010;
-    border:2px solid #101010;
-    border-radius:8px;
-    margin-top:4px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    box-shadow:0 5px 0 rgba(0,0,0,.25);
-}
-
-.plate-label{
+.header-kicker{
     font-size:7px;
+
+    letter-spacing:2.1px;
+
+    text-transform:uppercase;
+
+    color:#86aed5;
+
     font-weight:800;
-    letter-spacing:1.5px;
 }
 
-.plate-number{
-    font-size:20px;
+.header-title{
+
+    margin-top:5px;
+
+    font-size:25px;
+
+    line-height:1;
+
+    letter-spacing:-.7px;
+
     font-weight:900;
-    letter-spacing:1.5px;
-    margin-top:2px;
 }
 
+.header-subtitle{
 
-/* Identity */
+    margin-top:6px;
 
-.identity{
-    margin:18px 32px 0;
-    height:104px;
-    background:white;
-    border:1px solid #e1e7ef;
-    border-radius:14px;
-    box-shadow:0 8px 24px rgba(24,44,70,.06);
-    padding:16px 18px;
-}
+    color:#91a8bf;
 
-.identity-top{
-    display:flex;
-    justify-content:space-between;
-    gap:15px;
-}
-
-.identity-label{
-    font-size:7px;
-    color:#7d8da2;
-    letter-spacing:1.3px;
-    text-transform:uppercase;
-    font-weight:bold;
-}
-
-.identity-model{
-    font-size:19px;
-    font-weight:900;
-    color:#142237;
-    margin-top:3px;
-}
-
-.identity-maker{
     font-size:8px;
-    color:#66778c;
-    margin-top:3px;
+
+    letter-spacing:.3px;
 }
 
-.identity-pills{
-    display:flex;
-    gap:6px;
-    flex-wrap:wrap;
-    justify-content:flex-end;
+
+/* Registration */
+
+.registration{
+    text-align:right;
 }
 
-.pill{
-    background:#edf4fc;
-    color:#315e89;
-    border-radius:30px;
-    padding:6px 9px;
-    font-size:7px;
-    font-weight:bold;
-}
+.registration-label{
 
-.identity-stats{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:7px;
-    margin-top:13px;
-}
-
-.identity-stat{
-    border-left:2px solid #d9e7f6;
-    padding-left:8px;
-}
-
-.identity-stat span{
-    display:block;
     font-size:6.5px;
-    color:#8795a7;
+
+    color:#8ca8c4;
+
+    letter-spacing:1.5px;
+
     text-transform:uppercase;
+
+    font-weight:bold;
 }
 
-.identity-stat strong{
-    display:block;
-    font-size:8px;
-    color:#22334a;
+.registration-number{
+
     margin-top:3px;
-}
 
+    font-size:21px;
 
-/* Main grid */
-
-.main{
-    margin:15px 32px 0;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-}
-
-.panel{
-    background:white;
-    border:1px solid #e1e7ef;
-    border-radius:12px;
-    overflow:hidden;
-}
-
-.panel-head{
-    height:29px;
-    background:#f2f6fa;
-    border-bottom:1px solid #e3e8ee;
-    display:flex;
-    align-items:center;
-    gap:7px;
-    padding:0 11px;
-}
-
-.panel-dot{
-    width:5px;
-    height:15px;
-    border-radius:5px;
-    background:linear-gradient(#378ce9,#7259e8);
-}
-
-.panel-head span{
-    font-size:7.5px;
-    text-transform:uppercase;
-    letter-spacing:1px;
     font-weight:900;
-    color:#34465d;
+
+    letter-spacing:1.5px;
+
+    color:white;
 }
 
-.panel-body{
-    padding:9px 10px 10px;
+.registration-rule{
+
+    width:145px;
+
+    height:1px;
+
+    margin:6px 0 0 auto;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.6)
+        );
 }
 
-.field{
+
+/* =========================================================
+   VEHICLE HERO
+========================================================= */
+
+.vehicle-hero{
+
+    margin:15px 34px 0;
+
+    padding-bottom:12px;
+
+    border-bottom:
+        1px solid #ccd4dd;
+
+    position:relative;
+}
+
+.hero-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-end;
+
+    gap:20px;
+}
+
+.hero-label{
+
+    font-size:6.5px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1.5px;
+
+    color:#8a96a4;
+
+    font-weight:800;
+}
+
+.hero-model{
+
+    margin-top:3px;
+
+    font-size:18px;
+
+    font-weight:900;
+
+    letter-spacing:-.4px;
+
+    color:#152237;
+}
+
+.hero-maker{
+
+    margin-top:2px;
+
+    color:#657589;
+
+    font-size:8px;
+}
+
+.hero-side{
+
+    text-align:right;
+
+    font-size:7px;
+
+    color:#748398;
+
+    line-height:1.55;
+}
+
+.hero-side strong{
+
+    color:#24354b;
+
+    font-size:8px;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.content{
+
+    margin:12px 34px 0;
+
     display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    column-gap:28px;
+
+    row-gap:10px;
+}
+
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.section{
+
+    min-width:0;
+}
+
+.section-heading{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    margin-bottom:3px;
+
+    padding-bottom:4px;
+
+    border-bottom:
+        1px solid #bac4cf;
+}
+
+.section-heading:after{
+
+    content:"";
+
+    height:1px;
+
+    flex:1;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #c9d0d8 0,
+            #c9d0d8 2px,
+            transparent 2px,
+            transparent 5px
+        );
+}
+
+.section-number{
+
+    font-size:6px;
+
+    color:#5b82a9;
+
+    font-weight:900;
+
+    letter-spacing:.6px;
+}
+
+.section-title{
+
+    font-size:7.2px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1.2px;
+
+    font-weight:900;
+
+    color:#34465d;
+
+    white-space:nowrap;
+}
+
+
+/* =========================================================
+   DIRECT TEXT ROW
+========================================================= */
+
+.info-row{
+
+    display:grid;
+
     grid-template-columns:43% 57%;
-    min-height:25px;
-    border-bottom:1px solid #edf0f4;
+
+    min-height:22px;
+
+    border-bottom:
+        1px solid #e8ebee;
+
     align-items:center;
 }
 
-.field:last-child{
+.info-row:last-child{
     border-bottom:0;
 }
 
-.field-label{
-    font-size:6.7px;
+.info-label{
+
+    padding:3px 7px 3px 0;
+
+    font-size:6.2px;
+
+    color:#8995a4;
+
     text-transform:uppercase;
-    letter-spacing:.45px;
-    color:#8492a3;
-    padding:4px 5px 4px 0;
-    line-height:1.2;
+
+    letter-spacing:.42px;
+
+    line-height:1.15;
 }
 
-.field-value{
-    font-size:7.6px;
+.info-value{
+
+    padding:3px 0 3px 7px;
+
+    font-size:7.2px;
+
+    color:#1d2b3f;
+
     font-weight:700;
-    color:#1e2e43;
-    padding:4px 0 4px 5px;
-    line-height:1.25;
+
+    line-height:1.2;
+
     word-break:break-word;
 }
 
-.field-value.na{
-    color:#9ca7b4;
-    font-weight:600;
+.info-value.na{
+
+    color:#a6adb6;
+
+    font-weight:500;
 }
 
 
-/* Bottom wide sections */
+/* =========================================================
+   FULL WIDTH SECTION
+========================================================= */
 
-.bottom{
-    margin:10px 32px 0;
+.full-section{
+
+    margin:9px 34px 0;
 }
 
-.wide{
-    background:white;
-    border:1px solid #e1e7ef;
-    border-radius:12px;
-    overflow:hidden;
-    margin-bottom:9px;
+.address-row{
+
+    min-height:35px;
+
+    padding:7px 0 5px;
+
+    border-bottom:
+        1px solid #d6dce2;
+
+    font-size:7.4px;
+
+    line-height:1.4;
+
+    color:#344358;
 }
 
-.wide-grid{
+
+/* =========================================================
+   SMALL FOOT INFORMATION
+========================================================= */
+
+.meta-line{
+
+    margin:7px 34px 0;
+
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+
+    grid-template-columns:1fr 1fr 1fr;
+
+    border-top:
+        1px solid #c5cdd6;
+
+    border-bottom:
+        1px solid #c5cdd6;
 }
 
-.address{
-    padding:9px 11px 11px;
-    font-size:8px;
-    color:#34455a;
-    line-height:1.45;
-    min-height:44px;
+.meta-item{
+
+    min-height:29px;
+
+    padding:5px 9px;
+
+    border-right:
+        1px solid #d7dce2;
+}
+
+.meta-item:last-child{
+    border-right:0;
+}
+
+.meta-label{
+
+    display:block;
+
+    font-size:5.8px;
+
+    text-transform:uppercase;
+
+    letter-spacing:.7px;
+
+    color:#8c98a7;
+}
+
+.meta-value{
+
+    display:block;
+
+    margin-top:2px;
+
+    font-size:7px;
+
+    font-weight:800;
+
+    color:#26364b;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
 }
 
 
-/* Footer */
+/* =========================================================
+   FOOTER
+========================================================= */
 
 .pdf-footer{
+
     position:absolute;
-    bottom:0;
+
     left:0;
     right:0;
-    height:35px;
-    background:#eaf0f6;
-    border-top:1px solid #dce3eb;
+    bottom:0;
+
+    height:32px;
+
+    padding:0 34px;
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
-    padding:0 32px;
-    color:#77879a;
-    font-size:6.7px;
+
+    background:#eef1f4;
+
+    border-top:
+        1px solid #d4dae0;
+
+    color:#7b8796;
+
+    font-size:6.2px;
+
+    letter-spacing:.15px;
 }
 
 .pdf-footer strong{
-    color:#43566e;
+
+    color:#42546b;
+
+    letter-spacing:.6px;
 }
 
 
-/* Mobile editor */
+/* =========================================================
+   RESPONSIVE FRONTEND
+========================================================= */
 
 @media(max-width:650px){
 
@@ -568,37 +930,54 @@ button{
         align-items:stretch;
     }
 
-    .action-group{
+    .action-buttons{
         width:100%;
     }
 
-    .action-group .btn{
+    .action-buttons .btn{
         flex:1;
     }
+
 }
+
 </style>
 </head>
 
 
 <body>
 
+
+<!-- =====================================================
+     FRONTEND
+===================================================== -->
+
 <div class="app">
 
-    <div class="top">
+    <div class="topbar">
 
         <div class="brand">
 
-            <div class="logo">VR</div>
+            <div class="logo">
+                VR
+            </div>
 
             <div>
-                <h1>Vehicle Report Studio</h1>
-                <p>Single Page Premium PDF Generator</p>
+
+                <h1>
+                    Vehicle Report Studio
+                </h1>
+
+                <p>
+                    Premium Single-Page Report Generator
+                </p>
+
             </div>
 
         </div>
 
+
         <div class="badge">
-            A4 • SINGLE PAGE
+            A4 • INVOICE STYLE
         </div>
 
     </div>
@@ -606,13 +985,23 @@ button{
 
     <div class="editor">
 
-        <h2>Paste Vehicle JSON</h2>
+        <div class="editor-title">
 
-        <p>
-            Paste your complete JSON below. No manual fields required.
-        </p>
+            <h2>
+                Paste Vehicle JSON
+            </h2>
 
-        <textarea id="jsonInput" spellcheck="false">{
+            <p>
+                Paste your complete JSON and generate the premium report.
+            </p>
+
+        </div>
+
+
+        <textarea
+            id="jsonInput"
+            spellcheck="false"
+        >{
     "REGISTRATION_NUMBER": "GJ01HX7886",
     "OWNER_NAME": "PRAKASH",
     "MOBILE_NUMBER": "9898191250",
@@ -661,21 +1050,31 @@ button{
 
         <div class="actions">
 
-            <div class="action-group">
+            <div class="action-buttons">
 
-                <button class="btn primary" onclick="generatePDF()">
+                <button
+                    class="btn primary"
+                    onclick="generatePDF()"
+                >
                     Generate Premium PDF
                 </button>
 
-                <button class="btn secondary" onclick="formatJSON()">
+                <button
+                    class="btn secondary"
+                    onclick="formatJSON()"
+                >
                     Format
                 </button>
 
-                <button class="btn secondary" onclick="clearJSON()">
+                <button
+                    class="btn secondary"
+                    onclick="clearJSON()"
+                >
                     Clear
                 </button>
 
             </div>
+
 
             <div id="status">
                 Ready
@@ -688,16 +1087,29 @@ button{
 </div>
 
 
-<div class="loader" id="loader">
+<!-- LOADER -->
+
+<div
+    class="loader"
+    id="loader"
+>
 
     <div class="loader-box">
 
         <div class="spinner"></div>
 
-        <strong>Creating Single-Page PDF</strong>
+        <strong>
+            Generating Premium Report
+        </strong>
 
-        <div style="font-size:10px;color:#8ea2ba;margin-top:7px">
-            Optimizing layout...
+        <div
+            style="
+                margin-top:7px;
+                color:#8ea2ba;
+                font-size:10px;
+            "
+        >
+            Creating single A4 page...
         </div>
 
     </div>
@@ -705,81 +1117,86 @@ button{
 </div>
 
 
+<!-- PDF ROOT -->
+
 <div id="pdfRoot"></div>
 
 
 <script>
 
-/* =====================================================
+
+/* =========================================================
    LABELS
-===================================================== */
+========================================================= */
 
 const LABELS = {
 
-REGISTRATION_NUMBER:"Registration Number",
-OWNER_NAME:"Owner Name",
-MOBILE_NUMBER:"Mobile Number",
-FATHER_NAME:"Father's Name",
-OWNER_NUMBER:"Owner Number",
+    REGISTRATION_NUMBER:"Registration Number",
+    OWNER_NAME:"Owner Name",
+    MOBILE_NUMBER:"Mobile Number",
+    FATHER_NAME:"Father's Name",
+    OWNER_NUMBER:"Owner Number",
 
-MAKER:"Manufacturer",
-MODEL:"Model",
-VEHICLE_CATEGORY:"Vehicle Category",
-VEHICLE_CLASS:"Vehicle Class",
-BODY_TYPE:"Body Type",
-COLOUR:"Colour",
-FUEL_TYPE:"Fuel Type",
+    MAKER:"Manufacturer",
+    MODEL:"Model",
+    VEHICLE_CATEGORY:"Vehicle Category",
+    VEHICLE_CLASS:"Vehicle Class",
+    BODY_TYPE:"Body Type",
+    COLOUR:"Colour",
+    FUEL_TYPE:"Fuel Type",
 
-ENGINE_NUMBER:"Engine Number",
-CHASSIS_NUMBER:"Chassis Number",
-MANUFACTURING_MONTH:"Manufacturing Month",
+    ENGINE_NUMBER:"Engine Number",
+    CHASSIS_NUMBER:"Chassis Number",
+    MANUFACTURING_MONTH:"Manufacturing Month",
 
-SEATING_CAPACITY:"Seating Capacity",
-CUBIC_CAPACITY:"Cubic Capacity",
-UNLADEN_WEIGHT:"Unladen Weight",
-GROSS_VEHICLE_WEIGHT:"Gross Vehicle Weight",
-WHEELBASE:"Wheelbase",
+    SEATING_CAPACITY:"Seating Capacity",
+    CUBIC_CAPACITY:"Cubic Capacity",
+    UNLADEN_WEIGHT:"Unladen Weight",
+    GROSS_VEHICLE_WEIGHT:"Gross Vehicle Weight",
+    WHEELBASE:"Wheelbase",
 
-RTO_NAME:"RTO",
-STATE:"State",
-PINCODE:"Pincode",
+    RTO_NAME:"RTO Name",
+    STATE:"State",
+    PINCODE:"Pincode",
 
-TRANSMISSION_TYPE:"Transmission",
-MAX_POWER:"Maximum Power",
-MAX_TORQUE:"Maximum Torque",
-NO_OF_CYLINDERS:"Cylinders",
-FUEL_TANK_CAPACITY:"Fuel Tank Capacity",
-BOOT_SPACE:"Boot Space",
-TYRE_SIZE:"Tyre Size",
+    TRANSMISSION_TYPE:"Transmission",
+    MAX_POWER:"Maximum Power",
+    MAX_TORQUE:"Maximum Torque",
+    NO_OF_CYLINDERS:"Cylinders",
+    FUEL_TANK_CAPACITY:"Fuel Tank Capacity",
+    BOOT_SPACE:"Boot Space",
+    TYRE_SIZE:"Tyre Size",
 
-INSURANCE_COMPANY:"Insurance Company",
-INSURANCE_POLICY_NUMBER:"Insurance Policy Number",
-INSURANCE_VALIDITY:"Insurance Validity",
+    INSURANCE_COMPANY:"Insurance Company",
+    INSURANCE_POLICY_NUMBER:"Policy Number",
+    INSURANCE_VALIDITY:"Insurance Validity",
 
-PUC_NUMBER:"PUC Number",
-PUC_UPTO:"PUC Valid Until",
+    PUC_NUMBER:"PUC Number",
+    PUC_UPTO:"PUC Valid Until",
 
-HYPOTHECATION:"Hypothecation",
+    HYPOTHECATION:"Hypothecation",
 
-REGISTRATION_DATE:"Registration Date",
-REGISTRATION_VALIDITY:"Registration Validity",
+    REGISTRATION_DATE:"Registration Date",
+    REGISTRATION_VALIDITY:"Registration Validity",
 
-EMISSION_NORM:"Emission Norm",
-TAX_UPTO:"Tax Valid Until",
-VEHICLE_AGE:"Vehicle Age",
+    ADDRESS:"Registered Address",
 
-DETAIL_BY:"Details Prepared By"
+    EMISSION_NORM:"Emission Norm",
+    TAX_UPTO:"Tax Valid Until",
+    VEHICLE_AGE:"Vehicle Age",
+
+    DETAIL_BY:"Details Prepared By"
 
 };
 
 
-/* =====================================================
-   HELPERS
-===================================================== */
+/* =========================================================
+   UTILITY
+========================================================= */
 
-function esc(v){
+function esc(value){
 
-    return String(v ?? "")
+    return String(value ?? "")
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
         .replace(/>/g,"&gt;")
@@ -789,48 +1206,58 @@ function esc(v){
 }
 
 
-function value(v){
+function val(value){
 
     if(
-        v === undefined ||
-        v === null ||
-        String(v).trim()===""
+        value === null ||
+        value === undefined ||
+        String(value).trim() === ""
     ){
         return "NA";
     }
 
-    return String(v);
+    return String(value);
 
 }
 
 
-function label(k){
+function fieldLabel(key){
 
-    return LABELS[k] ||
-        k.replace(/_/g," ")
-          .toLowerCase()
-          .replace(/\b\w/g,c=>c.toUpperCase());
+    if(LABELS[key]){
+        return LABELS[key];
+    }
+
+    return key
+        .replace(/_/g," ")
+        .toLowerCase()
+        .replace(/\b\w/g,c=>c.toUpperCase());
 
 }
 
 
-function field(k,v){
+/* =========================================================
+   DIRECT TEXT ROW
+========================================================= */
 
-    const val=value(v);
+function row(key,value){
 
-    const na =
-        val.trim().toUpperCase()==="NA";
+    const v=val(value);
+
+    const isNA=
+        v.trim().toUpperCase()==="NA";
 
     return `
 
-        <div class="field">
+        <div class="info-row">
 
-            <div class="field-label">
-                ${esc(label(k))}
+            <div class="info-label">
+                ${esc(fieldLabel(key))}
             </div>
 
-            <div class="field-value ${na?"na":""}">
-                ${esc(val)}
+            <div
+                class="info-value ${isNA?"na":""}"
+            >
+                ${esc(v)}
             </div>
 
         </div>
@@ -840,32 +1267,43 @@ function field(k,v){
 }
 
 
-function panel(title,keys,data){
+/* =========================================================
+   SECTION
+========================================================= */
 
-    const exists =
-        keys.filter(k =>
-            Object.prototype.hasOwnProperty.call(data,k)
+function section(number,title,keys,data){
+
+    const existing=
+        keys.filter(
+            k =>
+            Object.prototype.hasOwnProperty
+            .call(data,k)
         );
 
-    if(!exists.length)return "";
+    if(!existing.length){
+        return "";
+    }
 
     return `
 
-        <div class="panel">
+        <div class="section">
 
-            <div class="panel-head">
+            <div class="section-heading">
 
-                <div class="panel-dot"></div>
+                <span class="section-number">
+                    ${number}
+                </span>
 
-                <span>${esc(title)}</span>
-
-            </div>
-
-            <div class="panel-body">
-
-                ${exists.map(k=>field(k,data[k])).join("")}
+                <span class="section-title">
+                    ${esc(title)}
+                </span>
 
             </div>
+
+            ${existing
+                .map(k=>row(k,data[k]))
+                .join("")
+            }
 
         </div>
 
@@ -874,58 +1312,69 @@ function panel(title,keys,data){
 }
 
 
-/* =====================================================
-   BUILD SINGLE PAGE
-===================================================== */
+/* =========================================================
+   BUILD PDF
+========================================================= */
 
 function buildPDF(data){
 
-    const reg=value(data.REGISTRATION_NUMBER);
-    const maker=value(data.MAKER);
-    const model=value(data.MODEL);
+    const reg=val(data.REGISTRATION_NUMBER);
+
+    const maker=val(data.MAKER);
+
+    const model=val(data.MODEL);
+
 
     const known=Object.keys(LABELS);
 
-    const extras=Object.keys(data)
-        .filter(k=>!known.includes(k));
+    const extra=
+        Object.keys(data)
+        .filter(
+            k=>!known.includes(k)
+        );
 
 
     return `
 
     <div class="pdf">
 
+        <div class="top-line"></div>
+
+
         <!-- HEADER -->
 
         <div class="pdf-header">
 
-            <div class="header-content">
+            <div class="header-inner">
 
                 <div>
 
-                    <div class="small-title">
-                        Premium Vehicle Information
+                    <div class="header-kicker">
+                        Vehicle Information • Premium Report
                     </div>
 
-                    <div class="pdf-title">
+                    <div class="header-title">
                         VEHICLE PROFILE
                     </div>
 
-                    <div class="pdf-subtitle">
-                        Structured vehicle information report
+                    <div class="header-subtitle">
+                        Structured vehicle data statement
                     </div>
 
                 </div>
 
 
-                <div class="plate">
+                <div class="registration">
 
-                    <div class="plate-label">
-                        REGISTRATION NUMBER
+                    <div class="registration-label">
+                        Registration Number
                     </div>
 
-                    <div class="plate-number">
+                    <div class="registration-number">
                         ${esc(reg)}
                     </div>
+
+                    <div class="registration-rule"></div>
 
                 </div>
 
@@ -934,73 +1383,52 @@ function buildPDF(data){
         </div>
 
 
-        <!-- VEHICLE IDENTITY -->
+        <!-- VEHICLE HERO -->
 
-        <div class="identity">
+        <div class="vehicle-hero">
 
-            <div class="identity-top">
+            <div class="hero-row">
 
                 <div>
 
-                    <div class="identity-label">
+                    <div class="hero-label">
                         Vehicle
                     </div>
 
-                    <div class="identity-model">
+                    <div class="hero-model">
                         ${esc(model)}
                     </div>
 
-                    <div class="identity-maker">
+                    <div class="hero-maker">
                         ${esc(maker)}
                     </div>
 
                 </div>
 
 
-                <div class="identity-pills">
+                <div class="hero-side">
 
-                    <div class="pill">
-                        ${esc(value(data.FUEL_TYPE))}
+                    <div>
+                        FUEL:
+                        <strong>
+                            ${esc(val(data.FUEL_TYPE))}
+                        </strong>
                     </div>
 
-                    <div class="pill">
-                        ${esc(value(data.VEHICLE_CATEGORY))}
+                    <div>
+                        COLOUR:
+                        <strong>
+                            ${esc(val(data.COLOUR))}
+                        </strong>
                     </div>
 
-                    <div class="pill">
-                        ${esc(value(data.BODY_TYPE))}
+                    <div>
+                        CATEGORY:
+                        <strong>
+                            ${esc(val(data.VEHICLE_CATEGORY))}
+                        </strong>
                     </div>
 
-                </div>
-
-            </div>
-
-
-            <div class="identity-stats">
-
-                <div class="identity-stat">
-                    <span>Colour</span>
-                    <strong>${esc(value(data.COLOUR))}</strong>
-                </div>
-
-                <div class="identity-stat">
-                    <span>Engine</span>
-                    <strong>${esc(value(data.CUBIC_CAPACITY))}</strong>
-                </div>
-
-                <div class="identity-stat">
-                    <span>Power</span>
-                    <strong>${esc(value(data.MAX_POWER))}</strong>
-                </div>
-
-                <div class="identity-stat">
-                    <span>Transmission</span>
-                    <strong>${esc(value(data.TRANSMISSION_TYPE))}</strong>
-                </div>
-
-                <div class="identity-stat">
-                    <span>Seats</span>
-                    <strong>${esc(value(data.SEATING_CAPACITY))}</strong>
                 </div>
 
             </div>
@@ -1008,11 +1436,12 @@ function buildPDF(data){
         </div>
 
 
-        <!-- MAIN INFORMATION -->
+        <!-- MAIN TWO COLUMN DATA -->
 
-        <div class="main">
+        <div class="content">
 
-            ${panel(
+            ${section(
+                "01",
                 "Owner Information",
                 [
                     "OWNER_NAME",
@@ -1024,7 +1453,8 @@ function buildPDF(data){
             )}
 
 
-            ${panel(
+            ${section(
+                "02",
                 "Registration & RTO",
                 [
                     "REGISTRATION_NUMBER",
@@ -1039,7 +1469,8 @@ function buildPDF(data){
             )}
 
 
-            ${panel(
+            ${section(
+                "03",
                 "Vehicle Classification",
                 [
                     "VEHICLE_CATEGORY",
@@ -1053,8 +1484,9 @@ function buildPDF(data){
             )}
 
 
-            ${panel(
-                "Engine & Mechanical",
+            ${section(
+                "04",
+                "Engine & Performance",
                 [
                     "ENGINE_NUMBER",
                     "CHASSIS_NUMBER",
@@ -1067,7 +1499,8 @@ function buildPDF(data){
             )}
 
 
-            ${panel(
+            ${section(
+                "05",
                 "Dimensions & Capacity",
                 [
                     "CUBIC_CAPACITY",
@@ -1083,7 +1516,8 @@ function buildPDF(data){
             )}
 
 
-            ${panel(
+            ${section(
+                "06",
                 "Insurance & PUC",
                 [
                     "INSURANCE_COMPANY",
@@ -1096,7 +1530,8 @@ function buildPDF(data){
             )}
 
 
-            ${panel(
+            ${section(
+                "07",
                 "Compliance",
                 [
                     "EMISSION_NORM",
@@ -1107,10 +1542,11 @@ function buildPDF(data){
             )}
 
 
-            ${extras.length
-                ? panel(
+            ${extra.length
+                ? section(
+                    "08",
                     "Additional Information",
-                    extras,
+                    extra,
                     data
                 )
                 : ""
@@ -1119,76 +1555,69 @@ function buildPDF(data){
         </div>
 
 
-        <!-- BOTTOM -->
+        <!-- ADDRESS -->
 
-        <div class="bottom">
+        <div class="full-section">
 
-            <div class="wide">
+            <div class="section-heading">
 
-                <div class="panel-head">
+                <span class="section-number">
+                    09
+                </span>
 
-                    <div class="panel-dot"></div>
-
-                    <span>Registered Address</span>
-
-                </div>
-
-                <div class="address">
-                    ${esc(value(data.ADDRESS))}
-                </div>
+                <span class="section-title">
+                    Registered Address
+                </span>
 
             </div>
 
 
-            <div class="wide">
+            <div class="address-row">
+                ${esc(val(data.ADDRESS))}
+            </div>
 
-                <div class="panel-head">
+        </div>
 
-                    <div class="panel-dot"></div>
 
-                    <span>Report Metadata</span>
+        <!-- META -->
 
-                </div>
+        <div class="meta-line">
 
-                <div class="wide-grid">
+            <div class="meta-item">
 
-                    <div class="field">
-                        <div class="field-label">
-                            Prepared By
-                        </div>
-                        <div class="field-value">
-                            ${esc(value(data.DETAIL_BY))}
-                        </div>
-                    </div>
+                <span class="meta-label">
+                    Prepared By
+                </span>
 
-                    <div class="field">
-                        <div class="field-label">
-                            State
-                        </div>
-                        <div class="field-value">
-                            ${esc(value(data.STATE))}
-                        </div>
-                    </div>
+                <span class="meta-value">
+                    ${esc(val(data.DETAIL_BY))}
+                </span>
 
-                    <div class="field">
-                        <div class="field-label">
-                            Pincode
-                        </div>
-                        <div class="field-value">
-                            ${esc(value(data.PINCODE))}
-                        </div>
-                    </div>
+            </div>
 
-                    <div class="field">
-                        <div class="field-label">
-                            Registration
-                        </div>
-                        <div class="field-value">
-                            ${esc(reg)}
-                        </div>
-                    </div>
 
-                </div>
+            <div class="meta-item">
+
+                <span class="meta-label">
+                    Registration
+                </span>
+
+                <span class="meta-value">
+                    ${esc(reg)}
+                </span>
+
+            </div>
+
+
+            <div class="meta-item">
+
+                <span class="meta-label">
+                    Vehicle Age
+                </span>
+
+                <span class="meta-value">
+                    ${esc(val(data.VEHICLE_AGE))}
+                </span>
 
             </div>
 
@@ -1200,7 +1629,7 @@ function buildPDF(data){
         <div class="pdf-footer">
 
             <span>
-                Premium Vehicle Information Report • Informational Use
+                Premium Vehicle Information Report
             </span>
 
             <strong>
@@ -1216,9 +1645,9 @@ function buildPDF(data){
 }
 
 
-/* =====================================================
-   READ JSON
-===================================================== */
+/* =========================================================
+   GET JSON
+========================================================= */
 
 function getData(){
 
@@ -1228,28 +1657,36 @@ function getData(){
         .trim();
 
     if(!raw){
-        throw new Error("Please paste JSON first.");
+        throw new Error(
+            "Please paste vehicle JSON first."
+        );
     }
 
     let data;
 
     try{
+
         data=JSON.parse(raw);
+
     }
-    catch(e){
+    catch(error){
+
         throw new Error(
-            "Invalid JSON. Please check the JSON format."
+            "Invalid JSON. Please check quotes, commas and brackets."
         );
+
     }
 
     if(
-        typeof data!=="object" ||
-        data===null ||
+        typeof data !== "object" ||
+        data === null ||
         Array.isArray(data)
     ){
+
         throw new Error(
             "JSON must be a valid object."
         );
+
     }
 
     return data;
@@ -1257,9 +1694,9 @@ function getData(){
 }
 
 
-/* =====================================================
+/* =========================================================
    FORMAT
-===================================================== */
+========================================================= */
 
 function formatJSON(){
 
@@ -1271,15 +1708,20 @@ function formatJSON(){
         const data=getData();
 
         document.getElementById("jsonInput")
-            .value=JSON.stringify(data,null,4);
+            .value=
+            JSON.stringify(data,null,4);
 
-        status.textContent="JSON formatted";
+        status.textContent=
+            "JSON formatted successfully";
+
         status.className="ok";
 
     }
-    catch(e){
+    catch(error){
 
-        status.textContent=e.message;
+        status.textContent=
+            error.message;
+
         status.className="error";
 
     }
@@ -1287,26 +1729,28 @@ function formatJSON(){
 }
 
 
-/* =====================================================
+/* =========================================================
    CLEAR
-===================================================== */
+========================================================= */
 
 function clearJSON(){
 
-    document.getElementById("jsonInput").value="";
+    document.getElementById("jsonInput")
+        .value="";
 
     const status=
         document.getElementById("status");
 
     status.textContent="Ready";
+
     status.className="";
 
 }
 
 
-/* =====================================================
+/* =========================================================
    GENERATE PDF
-===================================================== */
+========================================================= */
 
 async function generatePDF(){
 
@@ -1323,9 +1767,7 @@ async function generatePDF(){
         loader.classList.add("show");
 
         status.textContent=
-            "Creating single-page report...";
-
-        status.className="";
+            "Building premium single-page layout...";
 
 
         const root=
@@ -1336,7 +1778,7 @@ async function generatePDF(){
 
 
         await new Promise(
-            r=>setTimeout(r,300)
+            resolve=>setTimeout(resolve,350)
         );
 
 
@@ -1345,26 +1787,26 @@ async function generatePDF(){
 
 
         /*
-          scale 2 gives much better PDF quality
-          while retaining exact A4 dimensions.
+          Render at 2x resolution.
+          The PDF itself remains exactly one A4 page.
         */
 
         const canvas=
             await html2canvas(
                 page,
                 {
-                    scale:2,
-                    useCORS:true,
-                    backgroundColor:"#f4f7fb",
-                    logging:false,
                     width:794,
-                    height:1123
+                    height:1123,
+                    scale:2,
+                    backgroundColor:"#fbfaf7",
+                    useCORS:true,
+                    logging:false
                 }
             );
 
 
         status.textContent=
-            "Preparing PDF...";
+            "Finalizing PDF...";
 
 
         const {
@@ -1373,18 +1815,20 @@ async function generatePDF(){
 
 
         const pdf=
-            new jsPDF({
-                orientation:"portrait",
-                unit:"mm",
-                format:"a4",
-                compress:true
-            });
+            new jsPDF(
+                {
+                    orientation:"portrait",
+                    unit:"mm",
+                    format:"a4",
+                    compress:true
+                }
+            );
 
 
         const image=
             canvas.toDataURL(
                 "image/jpeg",
-                .96
+                .97
             );
 
 
@@ -1400,40 +1844,47 @@ async function generatePDF(){
         );
 
 
-        let registration=
-            value(data.REGISTRATION_NUMBER)
-            .replace(/[^a-zA-Z0-9_-]/g,"_");
+        let reg=
+            val(data.REGISTRATION_NUMBER)
+            .replace(
+                /[^a-zA-Z0-9_-]/g,
+                "_"
+            );
 
 
         pdf.save(
-            `Vehicle_Report_${registration}.pdf`
+            "Vehicle_Report_"+reg+".pdf"
         );
 
 
         status.textContent=
-            "Premium single-page PDF generated ✓";
+            "Single-page premium PDF generated ✓";
 
         status.className="ok";
 
     }
-    catch(e){
+    catch(error){
 
-        console.error(e);
+        console.error(error);
 
         status.textContent=
-            e.message || "Generation failed";
+            error.message ||
+            "PDF generation failed";
 
         status.className="error";
 
         alert(
-            e.message || "Unable to generate PDF."
+            error.message ||
+            "Unable to generate PDF."
         );
 
     }
     finally{
 
         setTimeout(
-            ()=>loader.classList.remove("show"),
+            ()=>{
+                loader.classList.remove("show");
+            },
             350
         );
 
@@ -1442,9 +1893,9 @@ async function generatePDF(){
 }
 
 
-/* =====================================================
+/* =========================================================
    CTRL + ENTER
-===================================================== */
+========================================================= */
 
 document
     .getElementById("jsonInput")
